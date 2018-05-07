@@ -17,28 +17,155 @@ static std::string races[] = {
 };
 static int numEmptySubs = 0;
 static std::string emptySubrace[] = { "" };
+static int subRevenantStats[] = { 0, 0, 0, 0, 0, 0 };
+static int* revenantSubraceStats[] = { subRevenantStats };
+
+static int subAarakocraStats[] = { 0, 2, 0, 0, 1, 0 };
+static int* aarakocraSubraceStats[] = { subAarakocraStats };
+
 static int numAasimarSubs = 3;
 static std::string aasimarSubrace[] = { "protector", "scourge", "fallen" };
+static int protectorAasimarStats[] = { 0, 0, 0, 0, 1, 2 };
+static int scourgeAasimarStats[] = { 0, 0, 1, 0, 0, 2 };
+static int fallenAasimarStats[] = { 1, 0, 0, 0, 0, 2 };
+static int* aasimarSubraceStats[] = { protectorAasimarStats, scourgeAasimarStats, fallenAasimarStats };
+
+static int subBugbearStats[] = { 2, 1, 0, 0, 0, 0 };
+static int* bugbearSubraceStats[] = { subBugbearStats };
+
+static int subChangelingStats[] = { 0, 1, 0, 0, 0, 1 };
+static int* changelingSubraceStats[] = { subChangelingStats };
+
 static int numDragonbornSubs = 10;
 static std::string dragonbornSubrace[] = { "black", "blue", "brass", "bronze", "copper", "gold", "green", "red", "silver", "white" };
+static int subDragonbornStats[] = { 2, 0, 0, 0, 0, 1 };
+static int* dragonbornSubraceStats[] = { subDragonbornStats };
+
 static int numDwarfSubs = 3;
 static std::string dwarfSubrace[] = { "mountain", "hill", "duergar" };
+static int mountainDwarfStats[] = { 2, 0, 2, 0, 0, 0 };
+static int hillDwarfStats[] = { 0, 0, 2, 0, 1, 0 };
+static int duergarDwarfStats[] = { 1, 0, 2, 0, 0, 0 };
+static int* dwarfSubraceStats[] = { mountainDwarfStats, hillDwarfStats, duergarDwarfStats };
+
 static int numElfSubs = 8;
 static std::string elfSubrace[] = { "high", "wood", "drow", "avariel", "grugach", "sea elf", "shadar-kai", "eladrin" };
+static int highElfStats[] = { 0, 2, 0, 1, 0, 0 };
+static int woodElfStats[] = { 0, 2, 0, 0, 1, 0 };
+static int drowElfStats[] = { 0, 2, 0, 0, 0, 1 };
+static int avarielElfStats[] = { 0, 2, 0, 0, 0, 0 };
+static int grugachElfStats[] = { 1, 2, 0, 0, 0, 0 };
+static int seaElfStats[] = { 0, 2, 1, 0, 0, 0 };
+static int shadarKaiElfStats[] = { 0, 2, 0, 0, 0, 1 };
+static int eladrinElfStats[] = { 0, 2, 0, 1, 0, 0 };
+static int* elfSubraceStats[] = { highElfStats, woodElfStats, drowElfStats, avarielElfStats, grugachElfStats, seaElfStats, shadarKaiElfStats, eladrinElfStats };
+
+static int subFirbolgStats[] = { 1, 0, 0, 0, 2, 0 };
+static int* firbolgSubraceStats[] = { subFirbolgStats };
+
 static int numGenasiSubs = 4;
 static std::string genasiSubrace[] = { "air", "earth", "fire", "wind" };
+static int airGenasiStats[] = { 0, 1, 2, 0, 0, 0 };
+static int earthGenasiStats[] = { 1, 0, 2, 0, 0, 0 };
+static int fireGenasiStats[] = { 0, 0, 2, 1, 0, 0 };
+static int windGenasiStats[] = { 0, 0, 2, 0, 1, 0 };
+static int* genasiSubraceStats[] = { airGenasiStats, earthGenasiStats, fireGenasiStats, windGenasiStats };
+
 static int numGnomeSubs = 3;
 static std::string gnomeSubrace[] = { "deep", "forest", "rock" };
+static int deepGnomeStats[] = { 0, 1, 0, 2, 0, 0 };
+static int forestGnomeStats[] = { 0, 1, 0, 2, 0, 0 };
+static int rockGnomeStats[] = { 0, 0, 1, 2, 0, 0 };
+static int* gnomeSubraceStats[] = { deepGnomeStats, forestGnomeStats, rockGnomeStats };
+
+static int subGoblinStats[] = { 0, 2, 1, 0, 0, 0 };
+static int* goblinSubraceStats[] = { subGoblinStats };
+
+static int subGoliathStats[] = { 2, 0, 1, 0, 0, 0 };
+static int* goliathSubraceStats[] = { subGoliathStats };
+
+static int subHalfElfStats[] = { 0, 0, 0, 0, 0, 2 };
+static int* halfElfSubraceStats[] = { subHalfElfStats };
+
 static int numHalflingSubs = 3;
 static std::string halflingSubrace[] = { "ghostwise", "lightfoot", "stout" };
+static int ghostwiseHalflingStats[] = { 0, 2, 0, 0, 1, 0 };
+static int lightfootHalflingStats[] = { 0, 2, 0, 0, 0, 1 };
+static int stoutHalflingStats[] = { 0, 2, 1, 0, 0, 0 };
+static int* halflingSubraceStats[] = { ghostwiseHalflingStats, lightfootHalflingStats, stoutHalflingStats };
+
+static int subHalfOrcStats[] = { 2, 0, 1, 0, 0, 0 };
+static int* halfOrcSubraceStats[] = { subHalfOrcStats };
+
+static int subHobgoblinStats[] = { 0, 0, 2, 1, 0, 0 };
+static int* hobgoblinSubraceStats[] = { subHobgoblinStats };
+
 static int numHumanSubs = 2;
 static std::string humanSubrace[] = { "standard", "variant" };
+static int standardHumanStats[] = { 1, 1, 1, 1, 1, 1 };
+static int variantHumanStats[] = { 0, 0, 0, 0, 0, 0 };
+static int* humanSubraceStats[] = { standardHumanStats, variantHumanStats };
+
+static int subKenkuStats[] = { 0, 2, 0, 0, 1, 0 };
+static int* kenkuSubraceStats[] = { subKenkuStats };
+
+static int subKoboldStats[] = { -2, 2, 0, 0, 0, 0 };
+static int* koboldSubraceStats[] = { subKoboldStats };
+
+static int subLizardfolkStats[] = { 0, 0, 2, 0, 1, 0 };
+static int* lizardfolkSubraceStats[] = { subLizardfolkStats };
+
+static int subMinotaurStats[] = { 1, 0, 0, 0, 0, 0 };
+static int* minotaurSubraceStats[] = { subMinotaurStats };
+
+static int subOrcStats[] = { 2, 0, 1, -2, 0, 0 };
+static int* orcSubraceStats[] = { subOrcStats };
+
 static int numShifterSubs = 6;
 static std::string shifterSubrace[] = { "beasthide", "cliffwalk", "longstride", "longtooth", "razorclaw", "wildhunt" };
+static int beasthideShifterStats[] = { 0, 1, 1, 0, 0, 0 };
+static int cliffwalkShifterStats[] = { 0, 2, 0, 0, 0, 0 };
+static int longstrideShifterStats[] = { 0, 2, 0, 0, 0, 0 };
+static int longtoothShifterStats[] = { 1, 1, 0, 0, 0, 0 };
+static int razorclawShifterStats[] = { 0, 2, 0, 0, 0, 0 };
+static int wildhuntShifterStats[] = { 0, 1, 0, 0, 1, 0 };
+static int* shifterSubraceStats[] = { beasthideShifterStats, cliffwalkShifterStats, longstrideShifterStats, longtoothShifterStats, razorclawShifterStats, wildhuntShifterStats };
+
+static int subTabaxiStats[] = { 0, 2, 0, 0, 0, 1 };
+static int* tabaxiSubraceStats[] = { subTabaxiStats };
+
 static int numTieflingSubs = 10;
 static std::string tieflingSubrace[] = { "infernal/asmodeus", "abyssal", "baalzebul", "dispater", "fierna", "glasya", "levistus", "mammon", "mephistopheles", "zariel" };
+static int infernalAsmodeusTieflingStats[] = { 0, 0, 0, 1, 0, 2 };
+static int abyssalTieflingStats[] = { 0, 0, 1, -1, 0, 0 };
+static int baalzebulTieflingStats[] = { 0, 0, 0, 1, 0, 2 };
+static int dispaterTieflingStats[] = { 0, 1, 0, 0, 0, 2 };
+static int fiernaTieflingStats[] = { 0, 0, 0, 0, 1, 2 };
+static int glasyaTieflingStats[] = { 0, 1, 0, 0, 0, 2 };
+static int levistusTieflingStats[] = { 0, 0, 1, 0, 0, 2 };
+static int mammonTieflingStats[] = { 0, 0, 0, 1, 0, 2 };
+static int mephistophelesTieflingStats[] = { 0, 0, 0, 1, 0, 2 };
+static int zarielTieflingStats[] = { 1, 0, 0, 0, 0, 2 };
+static int* tieflingSubraceStats[] = { infernalAsmodeusTieflingStats, abyssalTieflingStats, baalzebulTieflingStats, dispaterTieflingStats, fiernaTieflingStats, glasyaTieflingStats, levistusTieflingStats, mammonTieflingStats, mephistophelesTieflingStats, zarielTieflingStats };
+
+static int subTortleStats[] = { 2, 0, 0, 0, 1, 0 };
+static int* tortleSubraceStats[] = { subTortleStats };
+
+static int subTritonStats[] = { 1, 0, 1, 0, 0, 1 };
+static int* tritonSubraceStats[] = { subTritonStats };
+
+static int subWarforgedStats[] = { 1, 0, 1, 0, 0, 0 };
+static int* warforgedSubraceStats[] = { subWarforgedStats };
+
+static int subYuanTiStats[] = { 0, 0, 0, 1, 0, 2 };
+static int* yuanTiSubraceStats[] = { subYuanTiStats };
+
 static int numGithSubs = 2;
 static std::string githSubrace[] = { "githyanki", "githzerai" };
+static int githyankiGithStats[] = { 2, 0, 0, 1, 0, 0 };
+static int githzeraiGithStats[] = { 0, 0, 0, 1, 2, 0 };
+static int* githSubraceStats[] = { githyankiGithStats, githzeraiGithStats };
+
 static int subraceNums[] = {
 	numEmptySubs, numEmptySubs, numAasimarSubs, numEmptySubs, numEmptySubs, numDragonbornSubs, numDwarfSubs, numElfSubs, numEmptySubs, numGenasiSubs, numGnomeSubs,
 	numEmptySubs, numEmptySubs, numEmptySubs, numHalflingSubs, numEmptySubs, numEmptySubs, numHumanSubs, numEmptySubs, numEmptySubs, numEmptySubs, numEmptySubs,
@@ -48,6 +175,11 @@ static std::string* subraces[] = {
 	emptySubrace, emptySubrace, aasimarSubrace, emptySubrace, emptySubrace, dragonbornSubrace, dwarfSubrace, elfSubrace, emptySubrace, genasiSubrace, gnomeSubrace,
 	emptySubrace, emptySubrace, emptySubrace, halflingSubrace, emptySubrace, emptySubrace, humanSubrace, emptySubrace, emptySubrace, emptySubrace, emptySubrace,
 	emptySubrace, shifterSubrace, emptySubrace, tieflingSubrace, emptySubrace, emptySubrace, emptySubrace, emptySubrace, githSubrace
+};
+static int** subraceStats[] = {
+	revenantSubraceStats, aarakocraSubraceStats, aasimarSubraceStats, bugbearSubraceStats, changelingSubraceStats, dragonbornSubraceStats, dwarfSubraceStats, elfSubraceStats, firbolgSubraceStats, genasiSubraceStats, gnomeSubraceStats,
+	goblinSubraceStats, goliathSubraceStats, halfElfSubraceStats, halflingSubraceStats, halfOrcSubraceStats, hobgoblinSubraceStats, humanSubraceStats, kenkuSubraceStats, koboldSubraceStats, lizardfolkSubraceStats, minotaurSubraceStats,
+	orcSubraceStats, shifterSubraceStats, tabaxiSubraceStats, tieflingSubraceStats, tortleSubraceStats, tritonSubraceStats, warforgedSubraceStats, yuanTiSubraceStats, githSubraceStats
 };
 #pragma endregion races and subraces
 
@@ -471,6 +603,8 @@ int hitPoints;
 
 int main()
 {
+	//region stuff not being worked on -- move the endregion to right before whatever part you're working on if you're gonna be moving back and forth between static stuff and dynamic stuff frequently
+#pragma region
 	//seed rng
 	srand(time(NULL));
 
@@ -606,6 +740,39 @@ int main()
 				}
 			}
 		} while (counter < 2);
+#pragma endregion stuff not being worked on
+
+		//racial stat upgrades
+		for (int i = 0; i < 6; i++)
+		{
+			if (subrace == -1 || races[race] == "dragonborn") {
+				stats[i] += subraceStats[race][0][i];
+				//since the standard i'm using is to assign a -1 to the subrace of races w/out subs, this gets us to go into the array at the right point
+				//additionally, since certain races (like dragonborn) have the same stats regardless of subrace, they get dropped into this category too
+			}
+			else {
+				stats[i] += subraceStats[race][subrace][i];
+			}
+		}
+		int bonusRandomAssignedPoints = 0;
+		if (races[race] == "half-elf" || (races[race] == "human" && subraces[race][subrace] == "variant")) {
+			bonusRandomAssignedPoints = 2;
+		}
+		for (int i = 0; i < bonusRandomAssignedPoints; i++)	{
+			stats[rand() % 6]++;
+		}
+		if (races[race] == "minotaur") {
+			int randomStatToBoost = rand() % 3; //minotaur gets +1 to STR, INT, or WIS 
+			if (randomStatToBoost == 0) {
+				stats[0]++;
+			}
+			else if (randomStatToBoost == 1) {
+				stats[3]++;
+			}
+			else {
+				stats[4]++;
+			}
+		}
 
 		//feats or stat upgrades
 		int numFeats = levelMainClass / 4 + levelSecondaryClass / 4;
