@@ -764,7 +764,7 @@ int main()
 		std::cout << "Input level of character (or leave blank for a random level) : ";
 		std::string input;
 		std::getline(std::cin, input);
-		if (input == "") {
+		if (input.compare("") == STR_COMPARE_TRUE) {
 			level = 0; 
 		}
 		else {
@@ -786,9 +786,9 @@ int main()
 
 		//choose race & subrace
 		race = rand() % numberOfRaces;
-		if (races[race] == "revenant") {
+		if (races[race].compare("revenant") == STR_COMPARE_TRUE) {
 			secondaryRace = rand() % numberOfRaces;
-			while (races[secondaryRace] == "revenant") {
+			while (races[secondaryRace].compare("revenant") == STR_COMPARE_TRUE) {
 				secondaryRace = rand() % numberOfRaces;
 			}
 		}
@@ -804,32 +804,32 @@ int main()
 
 		//choose class & subclass
 		class_ = rand() % numberOfClasses;
-		if (classes[class_] == "multiclass") {
+		if (classes[class_].compare("multiclass") == STR_COMPARE_TRUE) {
 			if (level > 1) {
-				while (classes[class_] == "multiclass" || classes[class_] == "rune scribe") {
+				while (classes[class_].compare("multiclass") == STR_COMPARE_TRUE || classes[class_].compare("rune scribe") == STR_COMPARE_TRUE) {
 					class_ = rand() % numberOfClasses; //keep rerolling until you get a base class
 				}
 				secondaryClass = rand() % numberOfClasses;
-				while (classes[secondaryClass] == "multiclass" || classes[secondaryClass] == "rune scribe" || secondaryClass == class_) {
+				while (classes[secondaryClass].compare("multiclass") == STR_COMPARE_TRUE || classes[secondaryClass].compare("rune scribe") == STR_COMPARE_TRUE || secondaryClass == class_) {
 					secondaryClass = rand() % numberOfClasses; //keep rerolling until secondary is a base class that is not main class
 				}
 			}
 			else { //level <= 1
-				while (classes[class_] == "multiclass" || classes[class_] == "rune scribe") {
+				while (classes[class_].compare("multiclass") == STR_COMPARE_TRUE || classes[class_].compare("rune scribe") == STR_COMPARE_TRUE) {
 					class_ = rand() % numberOfClasses;
 				}
 			}
 		}
-		else if (classes[class_] == "rune scribe") {
+		else if (classes[class_].compare("rune scribe") == STR_COMPARE_TRUE) {
 			if (level > 1) {
 				secondaryClass = class_; //set secondary class to be rune scribe, then we'll set main class as base class
 				class_ = rand() % numberOfClasses;
-				while (classes[class_] == "multiclass" || classes[class_] == "rune scribe") {
+				while (classes[class_].compare("multiclass") == STR_COMPARE_TRUE || classes[class_].compare("rune scribe") == STR_COMPARE_TRUE) {
 					class_ = rand() % numberOfClasses; //keep rerolling until secondary is a base class
 				}
 			}
 			else { //level <= 1
-				while (classes[class_] == "multiclass" || classes[class_] == "rune scribe") {
+				while (classes[class_].compare("multiclass") == STR_COMPARE_TRUE || classes[class_].compare("rune scribe") == STR_COMPARE_TRUE) {
 					class_ = rand() % numberOfClasses;
 				}
 			}
@@ -896,7 +896,7 @@ int main()
 		//racial stat upgrades
 		for (int i = 0; i < 6; i++)
 		{
-			if (subrace == -1 || races[race] == "dragonborn") {
+			if (subrace == -1 || races[race].compare("dragonborn") == STR_COMPARE_TRUE) {
 				stats[i] += subraceStats[race][0][i];
 				//since the standard i'm using is to assign a -1 to the subrace of races w/out subs, this gets us to go into the array at the right point
 				//additionally, since certain races (like dragonborn) have the same stats regardless of subrace, they get dropped into this category too
@@ -906,13 +906,13 @@ int main()
 			}
 		}
 		int bonusRandomAssignedPoints = 0;
-		if (races[race] == "half-elf" || (races[race] == "human" && subraces[race][subrace] == "variant")) {
+		if (races[race].compare("half-elf") == STR_COMPARE_TRUE || (races[race].compare("human") == STR_COMPARE_TRUE && subraces[race][subrace].compare("variant") == STR_COMPARE_TRUE)) {
 			bonusRandomAssignedPoints = 2;
 		}
 		for (int i = 0; i < bonusRandomAssignedPoints; i++)	{
 			stats[rand() % 6]++;
 		}
-		if (races[race] == "minotaur") {
+		if (races[race].compare("minotaur") == STR_COMPARE_TRUE) {
 			int randomStatToBoost = rand() % 3; //minotaur gets +1 to STR, INT, or WIS 
 			if (randomStatToBoost == 0) {
 				stats[0]++;
@@ -931,14 +931,14 @@ int main()
 			numFeats++;
 		}
 			//fighter bonus feats
-		if ((classes[class_] == "fighter" && levelMainClass >= 6) || (classes[secondaryClass] == "fighter" && levelSecondaryClass >= 6)) {
+		if ((classes[class_].compare("fighter") == STR_COMPARE_TRUE && levelMainClass >= 6) || (classes[secondaryClass].compare("fighter") == STR_COMPARE_TRUE && levelSecondaryClass >= 6)) {
 			numFeats++;
 		}
-		if ((classes[class_] == "fighter" && levelMainClass >= 14) || (classes[secondaryClass] == "fighter" && levelSecondaryClass >= 14)) {
+		if ((classes[class_].compare("fighter") == STR_COMPARE_TRUE && levelMainClass >= 14) || (classes[secondaryClass].compare("fighter") == STR_COMPARE_TRUE && levelSecondaryClass >= 14)) {
 			numFeats++;
 		}
 			//variant human bonus feat
-		if ((races[race] == "human") && subraces[race][subrace] == "variant") {
+		if ((races[race].compare("human") == STR_COMPARE_TRUE) && subraces[race][subrace].compare("variant") == STR_COMPARE_TRUE) {
 			numFeats++;
 		}
 		for (int i = 0; i < numFeats; i++) {
@@ -963,7 +963,7 @@ int main()
 				levelMainClass -= 1;
 			}
 			levelSecondaryClass = level - levelMainClass;
-			if (classes[secondaryClass] == "rune scribe" && levelSecondaryClass > 5) {
+			if (classes[secondaryClass].compare("rune scribe") == STR_COMPARE_TRUE && levelSecondaryClass > 5) {
 				//can't have a rune scribe with more than 5 levels
 				int levelDiff = levelSecondaryClass - 5;
 				levelSecondaryClass = 5;
@@ -989,11 +989,11 @@ int main()
 			}
 			hitPoints += pointsToAdd;
 		}
-		if (races[race] == "dwarf" && subraces[race][subrace] == "hill") {
+		if (races[race].compare("dwarf") == STR_COMPARE_TRUE && subraces[race][subrace].compare("hill") == STR_COMPARE_TRUE) {
 			hitPoints += level;
 			//hill dwarves get +1 hp per level
 		}
-		if (races[race] == "tiefling" && subraces[race][subrace] == "abyssal") {
+		if (races[race].compare("tiefling") == STR_COMPARE_TRUE && subraces[race][subrace].compare("abyssal") == STR_COMPARE_TRUE) {
 			int bonusHP = level / 2;
 			if (bonusHP == 0) {
 				bonusHP++;
