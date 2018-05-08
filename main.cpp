@@ -7,6 +7,8 @@
 #include <random>
 #include <stdexcept>
 
+#define STR_COMPARE_TRUE 0
+
 //races and subraces
 #pragma region
 static int numberOfRaces = 31;
@@ -17,11 +19,18 @@ static std::string races[] = {
 };
 static int numEmptySubs = 0;
 static std::string emptySubrace[] = { "" };
-static int subRevenantStats[] = { 0, 0, 0, 0, 0, 0 };
+static std::string emptySubAbil = "";
+static std::string emptySubraceAbilities[] = { emptySubAbil };
+
+static int subRevenantStats[] = { 0, 0, 1, 0, 0, 0 }; // // REVENANT IS SUPPOSED TO ALSO REDUCE CERTAIN STATS IF YOU'RE A DRAGONBORN, HUMAN, OR TIEFLING // //
 static int* revenantSubraceStats[] = { subRevenantStats };
+static std::string revenantAbilities = "Relentless Nature";
+	//revenant has no subrace, and therefore no subrace abilities
 
 static int subAarakocraStats[] = { 0, 2, 0, 0, 1, 0 };
 static int* aarakocraSubraceStats[] = { subAarakocraStats };
+static std::string aarakocraAbilities = "50 feet fly speed (not in med/heavy armor), Talons (1d4)";
+	//aarakocra has no subrace, and therefore no subrace abilities
 
 static int numAasimarSubs = 3;
 static std::string aasimarSubrace[] = { "protector", "scourge", "fallen" };
@@ -29,17 +38,40 @@ static int protectorAasimarStats[] = { 0, 0, 0, 0, 1, 2 };
 static int scourgeAasimarStats[] = { 0, 0, 1, 0, 0, 2 };
 static int fallenAasimarStats[] = { 1, 0, 0, 0, 0, 2 };
 static int* aasimarSubraceStats[] = { protectorAasimarStats, scourgeAasimarStats, fallenAasimarStats };
+static std::string aasimarAbilities = "60 foot darkvision, healing hands, light cantrip, necrotic damage resistance, radiant damage resistance";
+static std::string protectorAasimarAbilities = "radiant soul";
+static std::string scourgeAasimarAbilities = "radiant consumption";
+static std::string fallenAasimarAbilities = "necrotic shroud";
+static std::string aasimarSubraceAbilities[] = { protectorAasimarAbilities, scourgeAasimarAbilities, fallenAasimarAbilities };
 
 static int subBugbearStats[] = { 2, 1, 0, 0, 0, 0 };
 static int* bugbearSubraceStats[] = { subBugbearStats };
+static std::string bugbearAbilities = "60 foot darkvision, +5 foot melee reach, powerful build, surprise attack, proficiency in stealth";
+	//bugbear also gains proficiency in the stealth skill
+	//bugbear has no subraces, so no subrace abilities
 
 static int subChangelingStats[] = { 0, 1, 0, 0, 0, 1 };
 static int* changelingSubraceStats[] = { subChangelingStats };
+static std::string changelingAbilities = "shapechanger, proficiency in deception";
+	//changeling also gains proficiency in the deception skill
+	//changeling has no subraces, so no subrace abilities
 
 static int numDragonbornSubs = 10;
 static std::string dragonbornSubrace[] = { "black", "blue", "brass", "bronze", "copper", "gold", "green", "red", "silver", "white" };
 static int subDragonbornStats[] = { 2, 0, 0, 0, 0, 1 };
 static int* dragonbornSubraceStats[] = { subDragonbornStats };
+static std::string dragonbornAbilities = "";
+static std::string blackDragonbornAbilities = "acid breath weapon (5 x 30 foot line w/ dex save), resistance to acid damage";
+static std::string blueDragonbornAbilities = "lightning breath weapon (5 x 30 foot line w/ dex save), resistance to lightning damage";
+static std::string brassDragonbornAbilities = "fire breath weapon (5 x 30 foot line w/ dex save), resistance to fire damage";
+static std::string bronzeDragonbornAbilities = "lightning breath weapon (5 x 30 foot line w/ dex save), resistance to lightning damage";
+static std::string copperDragonbornAbilities = "acid breath weapon (5 x 30 foot line w/ dex save), resistance to acid damage";
+static std::string goldDragonbornAbilities = "fire breath weapon (15 foot cone w/ dex save), resistance to fire damage";
+static std::string greenDragonbornAbilities = "poison breath weapon (15 foot cone w/ con save), resistance to poison damage";
+static std::string redDragonbornAbilities = "fire breath weapon (15 foot cone w/ dex save), resistance to fire damage";
+static std::string silverDragonbornAbilties = "cold breath weapon (15 foot cone w/ con save), resistance to cold damage";
+static std::string whiteDragonbornAbilities = "cold breath weapon (15 foot cone w/ con save), resistance to cold damage";
+static std::string dragonbornSubraceAbilities[] = { blackDragonbornAbilities, blueDragonbornAbilities, brassDragonbornAbilities, bronzeDragonbornAbilities, copperDragonbornAbilities, goldDragonbornAbilities, greenDragonbornAbilities, redDragonbornAbilities, silverDragonbornAbilties, whiteDragonbornAbilities };
 
 static int numDwarfSubs = 3;
 static std::string dwarfSubrace[] = { "mountain", "hill", "duergar" };
@@ -47,6 +79,11 @@ static int mountainDwarfStats[] = { 2, 0, 2, 0, 0, 0 };
 static int hillDwarfStats[] = { 0, 0, 2, 0, 1, 0 };
 static int duergarDwarfStats[] = { 1, 0, 2, 0, 0, 0 };
 static int* dwarfSubraceStats[] = { mountainDwarfStats, hillDwarfStats, duergarDwarfStats };
+static std::string dwarfAbilities = "dwarven combat training, stone-cunning, advantage on saves vs poison, resistance to poison damage, proficiency with (one of) smith/brewer/mason's tools, speed is not reduced by heavy armor";
+static std::string mountainDwarfAbilities = "60 foot darkvision, proficiency with light and medium armor";
+static std::string hillDwarfAbilities = "60 foot darkvision"; //+1 hp per level, accounted for later on
+static std::string duergarDwarfAbilities = "120 foot darkvision, sunlight sensativity, duergar magic, advantage on saves vs illusions/being charmed/being paralyzed";
+static std::string dwarfSubraceAbilities[] = { mountainDwarfAbilities, hillDwarfAbilities, duergarDwarfAbilities };
 
 static int numElfSubs = 8;
 static std::string elfSubrace[] = { "high", "wood", "drow", "avariel", "grugach", "sea elf", "shadar-kai", "eladrin" };
@@ -59,17 +96,39 @@ static int seaElfStats[] = { 0, 2, 1, 0, 0, 0 };
 static int shadarKaiElfStats[] = { 0, 2, 0, 0, 0, 1 };
 static int eladrinElfStats[] = { 0, 2, 0, 1, 0, 0 };
 static int* elfSubraceStats[] = { highElfStats, woodElfStats, drowElfStats, avarielElfStats, grugachElfStats, seaElfStats, shadarKaiElfStats, eladrinElfStats };
+static std::string elfAbilities = "fey ancestry, trance, proficiency in perception";
+	//elves have proficiency in perception
+static std::string highElfAbilities = "60 foot darkvision, elf weapon training, gain a wizard cantrip";
+	//high elves gain a bonus wizard cantrip which needs to be accounted for later
+static std::string woodElfAbilities = "60 foot darkvision, elf weapon training, mask of the wild";
+static std::string drowElfAbilities = "120 foot darkvision, sunlight sensativity, drow weapon training, drow magic";
+static std::string avarielElfAbilities = "60 foot darkvision, 30 foot fly speed (not in med/heavy armor)";
+static std::string grugachElfAbilities = "60 foot darkvision, grugach weapon training, gain a druid cantrip";
+	//grugach elves gain a bonus druid cantrip which needs to be accounted for later
+static std::string seaElfAbilities = "60 foot darkvision, 30 foot swim speed, can breathe air or water, sea elf weapon training, friend of the sea";
+static std::string shadarKaiElfAbilities = "60 foot darkvision, blessing of the raven queen, gain (one of) chill touch/spare the dying/thaumaturgy";
+	//shadark kai elves gain a bonus cantrip which needs to be accounted for later
+static std::string eladrinElfAbilities = "60 foot darkvision, fey step, shifting seasons";
+static std::string elfSubraceAbilities[] = { highElfAbilities, woodElfAbilities, drowElfAbilities, avarielElfAbilities, grugachElfAbilities, seaElfAbilities, shadarKaiElfAbilities, eladrinElfAbilities };
 
 static int subFirbolgStats[] = { 1, 0, 0, 0, 2, 0 };
 static int* firbolgSubraceStats[] = { subFirbolgStats };
+static std::string firbolgAbilities = "firbolg magic, hidden step, powerful build, speech of beast and leaf";
+	//firbolg has no subrace, so therefore no subrace abilities
 
 static int numGenasiSubs = 4;
-static std::string genasiSubrace[] = { "air", "earth", "fire", "wind" };
+static std::string genasiSubrace[] = { "air", "earth", "fire", "water" };
 static int airGenasiStats[] = { 0, 1, 2, 0, 0, 0 };
 static int earthGenasiStats[] = { 1, 0, 2, 0, 0, 0 };
 static int fireGenasiStats[] = { 0, 0, 2, 1, 0, 0 };
-static int windGenasiStats[] = { 0, 0, 2, 0, 1, 0 };
-static int* genasiSubraceStats[] = { airGenasiStats, earthGenasiStats, fireGenasiStats, windGenasiStats };
+static int waterGenasiStats[] = { 0, 0, 2, 0, 1, 0 };
+static int* genasiSubraceStats[] = { airGenasiStats, earthGenasiStats, fireGenasiStats, waterGenasiStats };
+static std::string genasiAbilities = "";
+static std::string airGenasiAbilities = "unending breath, mingle with the wind";
+static std::string earthGenasiAbilities = "earth walk, merge with stone";
+static std::string fireGenasiAbilities = "60 foot darkvision, reach to the blaze, resistance to fire damage";
+static std::string waterGenasiAbilities = "30 foot swim speed, amphibious, call to the wave, resistance to acid damage";
+static std::string genasiSubraceAbilities[] = { airGenasiAbilities, earthGenasiAbilities, fireGenasiAbilities, waterGenasiAbilities };
 
 static int numGnomeSubs = 3;
 static std::string gnomeSubrace[] = { "deep", "forest", "rock" };
@@ -77,15 +136,27 @@ static int deepGnomeStats[] = { 0, 1, 0, 2, 0, 0 };
 static int forestGnomeStats[] = { 0, 1, 0, 2, 0, 0 };
 static int rockGnomeStats[] = { 0, 0, 1, 2, 0, 0 };
 static int* gnomeSubraceStats[] = { deepGnomeStats, forestGnomeStats, rockGnomeStats };
+static std::string gnomeAbilities = "advantage on int/wis/cha saves against magic";
+static std::string deepGnomeAbilities = "120 foot darkvision, advantage on stealth to hide in rocky terrain";
+static std::string forestGnomeAbilities = "60 foot darkvision, speak with small beasts, gain the minor illusion cantrip";
+static std::string rockGnomeAbilities = "60 foot darkvision, artificer's lore, tinker";
+static std::string gnomeSubraceAbilities[] = { deepGnomeAbilities, forestGnomeAbilities, rockGnomeAbilities };
 
 static int subGoblinStats[] = { 0, 2, 1, 0, 0, 0 };
 static int* goblinSubraceStats[] = { subGoblinStats };
+static std::string goblinAbilities = "60 foot darkvision, fury of the small, bonus action disengage or hide";
+	//goblins have no subraces, therefore no subrace abilities
 
 static int subGoliathStats[] = { 2, 0, 1, 0, 0, 0 };
 static int* goliathSubraceStats[] = { subGoliathStats };
+static std::string goliathAbilities = "stone's endurance, powerful build, mountain born, proficiency in athletics";
+	//goliaths have no subraces, therefore no subrace abilities
 
 static int subHalfElfStats[] = { 0, 0, 0, 0, 0, 2 };
 static int* halfElfSubraceStats[] = { subHalfElfStats };
+static std::string halfElfAbilities = "60 foot darkvision, fey ancestry, skill versatility (+2 skill proficiencies)";
+	//half elves gain 2 bonus skill proficiencies which will need to be accounted for later
+	//half elves have no (implemented) subraces, therefore no subrace abilities
 
 static int numHalflingSubs = 3;
 static std::string halflingSubrace[] = { "ghostwise", "lightfoot", "stout" };
@@ -93,33 +164,61 @@ static int ghostwiseHalflingStats[] = { 0, 2, 0, 0, 1, 0 };
 static int lightfootHalflingStats[] = { 0, 2, 0, 0, 0, 1 };
 static int stoutHalflingStats[] = { 0, 2, 1, 0, 0, 0 };
 static int* halflingSubraceStats[] = { ghostwiseHalflingStats, lightfootHalflingStats, stoutHalflingStats };
+static std::string halflingAbilities = "lucky, brave, nimbleness";
+static std::string ghostwiseHalflingAbilities = "silent speech";
+static std::string lightfootHalflingAbillities = "naturally stealthy";
+static std::string stoutHalflingAbilities = "advantage on saves vs poison, resistance to poison damage";
+static std::string halflingSubraceAbilities[] = { ghostwiseHalflingAbilities, lightfootHalflingAbillities, stoutHalflingAbilities };
 
 static int subHalfOrcStats[] = { 2, 0, 1, 0, 0, 0 };
 static int* halfOrcSubraceStats[] = { subHalfOrcStats };
+static std::string halfOrcAbilities = "60 foot darkvision, relentless endurance, savage attacks, proficiency in intimidation";
+	//half orcs have no subraces, therefore no subrace abilities
 
 static int subHobgoblinStats[] = { 0, 0, 2, 1, 0, 0 };
 static int* hobgoblinSubraceStats[] = { subHobgoblinStats };
+static std::string hobgoblinAbilities = "60 foot darkvision, saving face, proficiency in light armor, proficiency in 2 martial weapons";
+	//hobgoblins have proficiency in light armor and 2 martial weapons, which needs to be accounted for later
+	//hobgoblins have no subraces, therefore no subrace abilities
 
 static int numHumanSubs = 2;
 static std::string humanSubrace[] = { "standard", "variant" };
 static int standardHumanStats[] = { 1, 1, 1, 1, 1, 1 };
 static int variantHumanStats[] = { 0, 0, 0, 0, 0, 0 };
 static int* humanSubraceStats[] = { standardHumanStats, variantHumanStats };
+static std::string humanAbilities = "";
+static std::string standardHumanAbilities = "";
+static std::string variantHumanAbilities = "+1 skill proficiency, +1 feat";
+	//variant humans gain a bonus skill which needs to be accounted for later -- the bonus feat is already taken into account
+static std::string humanSubraceAbilities[] = { standardHumanAbilities, variantHumanAbilities };
 
 static int subKenkuStats[] = { 0, 2, 0, 0, 1, 0 };
 static int* kenkuSubraceStats[] = { subKenkuStats };
+static std::string kenkuAbilities = "expert forgery, mimicry, proficiency in 2 of acrobatics/deception/stealth/sleight of hand";
+	//kenku gains 2 bonus skills which need to be accounted for later
+	//kenku has no subraces, therefore no subrace abilities
 
 static int subKoboldStats[] = { -2, 2, 0, 0, 0, 0 };
 static int* koboldSubraceStats[] = { subKoboldStats };
+static std::string koboldAbilities = "60 foot darkvision, sunlight sensativity, grover cower and beg, pack tactics";
+	//kobolds have no subraces, therefore no subrace abilities
 
 static int subLizardfolkStats[] = { 0, 0, 2, 0, 1, 0 };
 static int* lizardfolkSubraceStats[] = { subLizardfolkStats };
+static std::string lizardfolkAbilities = "30 foot swim speed, hold breath 15 mins, bite, hungry jaws, natural armor, cunning artisan, proficiency in 2 of animal handling/nature/perception/stealth/survival";
+	//lizaradfolk have no subraces, therefore no subrace abilities
 
 static int subMinotaurStats[] = { 1, 0, 0, 0, 0, 0 };
 static int* minotaurSubraceStats[] = { subMinotaurStats };
+static std::string minotaurAbilities = "hammering horns, goring rush, labyrinthine recall, proficiency with navigator's tools and water vehicles";
+	//minotaurs gain 2 tool proficiencies which need to be accounted for later
+	//minotaurs have no subraces, therefore no subrace abilities
 
 static int subOrcStats[] = { 2, 0, 1, -2, 0, 0 };
 static int* orcSubraceStats[] = { subOrcStats };
+static std::string orcAbilities = "60 foot darkvision, aggressive, powerful build, proficiency with intimidation";
+	//orcs have intimidation proficiency which needs to be accounted for later
+	//orcs have no subraces, therefore no subrace abilities
 
 static int numShifterSubs = 6;
 static std::string shifterSubrace[] = { "beasthide", "cliffwalk", "longstride", "longtooth", "razorclaw", "wildhunt" };
@@ -130,9 +229,20 @@ static int longtoothShifterStats[] = { 1, 1, 0, 0, 0, 0 };
 static int razorclawShifterStats[] = { 0, 2, 0, 0, 0, 0 };
 static int wildhuntShifterStats[] = { 0, 1, 0, 0, 1, 0 };
 static int* shifterSubraceStats[] = { beasthideShifterStats, cliffwalkShifterStats, longstrideShifterStats, longtoothShifterStats, razorclawShifterStats, wildhuntShifterStats };
+static std::string shifterAbilities = "60 foot darkvision, shifting";
+static std::string beasthideShifterAbilities = "+1 AC while shifting";
+static std::string cliffwalkShifterAbilities = "30 foot climb speed while shifting";
+static std::string longstrideShifterAbilities = "dash as bonus action while shifting";
+static std::string longtoothShifterAbilities = "gain a bite attack while shifting";
+static std::string razorclawShifterAbilities = "gain an unarmed strike attack while shifting";
+static std::string wildhuntShifterAbilities = "advantage on wis checks and saves while shifting";
+static std::string shifterSubraceAbilities[] = { beasthideShifterAbilities, cliffwalkShifterAbilities, longstrideShifterAbilities, longtoothShifterAbilities, razorclawShifterAbilities, wildhuntShifterAbilities };
 
 static int subTabaxiStats[] = { 0, 2, 0, 0, 0, 1 };
 static int* tabaxiSubraceStats[] = { subTabaxiStats };
+static std::string tabaxiAbilities = "20 foot climb speed, 60 foot darkvision, feline agility, cat's claws, proficiency in perception and stealth";
+	//tabaxi gains proficiency in 2 skills, which needs to be accounted for later
+	//tabaxi has no subraces, therefore no subrace abilities
 
 static int numTieflingSubs = 10;
 static std::string tieflingSubrace[] = { "infernal/asmodeus", "abyssal", "baalzebul", "dispater", "fierna", "glasya", "levistus", "mammon", "mephistopheles", "zariel" };
@@ -147,24 +257,55 @@ static int mammonTieflingStats[] = { 0, 0, 0, 1, 0, 2 };
 static int mephistophelesTieflingStats[] = { 0, 0, 0, 1, 0, 2 };
 static int zarielTieflingStats[] = { 1, 0, 0, 0, 0, 2 };
 static int* tieflingSubraceStats[] = { infernalAsmodeusTieflingStats, abyssalTieflingStats, baalzebulTieflingStats, dispaterTieflingStats, fiernaTieflingStats, glasyaTieflingStats, levistusTieflingStats, mammonTieflingStats, mephistophelesTieflingStats, zarielTieflingStats };
+static std::string tieflingAbilities = "60 foot darkvision";
+static std::string infernalAsmodeusTieflingAbilities = "hellish resistance, infernal legacy";
+static std::string abyssalTieflingAbilities = "abyssal arcana";
+	//abyssal tieflings also gain 1/2 their level in bonus hp, which is accounted for later
+static std::string baalzebulTieflingAbilities = "legacy of maladomini (bonus spells)";
+static std::string dispaterTieflingAbilities = "legacy of dis (bonus spells)";
+static std::string fiernaTieflingAbilities = "legacy of phlegethos (bonus spells)";
+static std::string glasyaTieflingAbilities = "legacy of malbolge (bonus spells)";
+static std::string levistusTieflingAbilities = "legacy of stygia (bonus spells)";
+static std::string mammonTieflingAbilities = "legacy of minauros (bonus spells)";
+static std::string mephistophelesTieflingAbilities = "legacy of cania (bonus spells)";
+static std::string zarielTieflingAbilities = "legacy of avernus (bonus spells)";
+	//a bunch of tiefling variants gain bonus spells which need to be accounted for later
+static std::string tieflingSubraceAbilities[] = { infernalAsmodeusTieflingAbilities, abyssalTieflingAbilities, baalzebulTieflingAbilities, dispaterTieflingAbilities, fiernaTieflingAbilities, glasyaTieflingAbilities, levistusTieflingAbilities, mammonTieflingAbilities, mephistophelesTieflingAbilities, zarielTieflingAbilities };
 
 static int subTortleStats[] = { 2, 0, 0, 0, 1, 0 };
 static int* tortleSubraceStats[] = { subTortleStats };
+static std::string tortleAbilities = "natural armor, shell defense, claws, hold breath, proficiency in survival";
+	//tortles gain proficiency in survival, which needs to be accounted for later
+	//tortles have no subraces, therefore no subrace abilities
 
 static int subTritonStats[] = { 1, 0, 1, 0, 0, 1 };
 static int* tritonSubraceStats[] = { subTritonStats };
+static std::string tritonAbilities = "30 foot swim speed, amphibious, control air and water (bonus spells), emissary of the sea, guardians of the depths";
+	//tritons have bonus spells which need to be accounted for later
+	//tritons have no subraces, therefore no subrace abilities
 
 static int subWarforgedStats[] = { 1, 0, 1, 0, 0, 0 };
 static int* warforgedSubraceStats[] = { subWarforgedStats };
+static std::string warforgedAbilities = "composite plating (+1 AC), living construct";
+	//warforged have no subraces, therefore no subrace abilities
 
 static int subYuanTiStats[] = { 0, 0, 0, 1, 0, 2 };
 static int* yuanTiSubraceStats[] = { subYuanTiStats };
+static std::string yuanTiAbilities = "60 foot darkvision, innate spellcasting, advantage on saves vs magic, immune to poison damage and the poisoned condition";
+	//yuan ti have bonus spells that need to be accounted for later
+	//yuan ti have no subraces, therefore no subrace abilities
 
 static int numGithSubs = 2;
 static std::string githSubrace[] = { "githyanki", "githzerai" };
 static int githyankiGithStats[] = { 2, 0, 0, 1, 0, 0 };
 static int githzeraiGithStats[] = { 0, 0, 0, 1, 2, 0 };
 static int* githSubraceStats[] = { githyankiGithStats, githzeraiGithStats };
+static std::string githAbilities = "";
+static std::string githyankiGithAbilities = "githyanki psionics (bonus spells), proficiency in one language, proficiency in one skill or language, proficiency in light and medium armor";
+	//githyanki have a bunch of bonus proficiencies that need to be accounted for later
+static std::string githzeraiGithAbilities = "monastic training, githzerai psionics (bonus spells)";
+	//githyanki have bonus spells and stuff that needs to be accounted for later
+static std::string githSubraceAbilities[] = { githyankiGithAbilities, githzeraiGithAbilities };
 
 static int subraceNums[] = {
 	numEmptySubs, numEmptySubs, numAasimarSubs, numEmptySubs, numEmptySubs, numDragonbornSubs, numDwarfSubs, numElfSubs, numEmptySubs, numGenasiSubs, numGnomeSubs,
@@ -180,6 +321,16 @@ static int** subraceStats[] = {
 	revenantSubraceStats, aarakocraSubraceStats, aasimarSubraceStats, bugbearSubraceStats, changelingSubraceStats, dragonbornSubraceStats, dwarfSubraceStats, elfSubraceStats, firbolgSubraceStats, genasiSubraceStats, gnomeSubraceStats,
 	goblinSubraceStats, goliathSubraceStats, halfElfSubraceStats, halflingSubraceStats, halfOrcSubraceStats, hobgoblinSubraceStats, humanSubraceStats, kenkuSubraceStats, koboldSubraceStats, lizardfolkSubraceStats, minotaurSubraceStats,
 	orcSubraceStats, shifterSubraceStats, tabaxiSubraceStats, tieflingSubraceStats, tortleSubraceStats, tritonSubraceStats, warforgedSubraceStats, yuanTiSubraceStats, githSubraceStats
+};
+static std::string raceAbilities[] = {
+	revenantAbilities, aarakocraAbilities, aasimarAbilities, bugbearAbilities, changelingAbilities, dragonbornAbilities, dwarfAbilities, elfAbilities, firbolgAbilities, genasiAbilities, gnomeAbilities,
+	goblinAbilities, goliathAbilities, halfElfAbilities, halflingAbilities, halfOrcAbilities, hobgoblinAbilities, humanAbilities, kenkuAbilities, koboldAbilities, lizardfolkAbilities, minotaurAbilities,
+	orcAbilities, shifterAbilities, tabaxiAbilities, tieflingAbilities, tortleAbilities, tritonAbilities, warforgedAbilities, yuanTiAbilities, githAbilities
+};
+static std::string* subraceAbilities[] = {
+	emptySubraceAbilities, emptySubraceAbilities, aasimarSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, dragonbornSubraceAbilities, dwarfSubraceAbilities, elfSubraceAbilities, emptySubraceAbilities, genasiSubraceAbilities, gnomeSubraceAbilities,
+	emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, halflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, humanSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities,
+	emptySubraceAbilities, shifterSubraceAbilities, emptySubraceAbilities, tieflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, githSubraceAbilities
 };
 #pragma endregion races and subraces
 
@@ -786,6 +937,10 @@ int main()
 		if ((classes[class_] == "fighter" && levelMainClass >= 14) || (classes[secondaryClass] == "fighter" && levelSecondaryClass >= 14)) {
 			numFeats++;
 		}
+			//variant human bonus feat
+		if ((races[race] == "human") && subraces[race][subrace] == "variant") {
+			numFeats++;
+		}
 		for (int i = 0; i < numFeats; i++) {
 			//randomly assign +1 to two stats -- eventually I'll include feats too
 			int statToUpgrade = rand() % 6;
@@ -833,6 +988,17 @@ int main()
 				pointsToAdd = 1;
 			}
 			hitPoints += pointsToAdd;
+		}
+		if (races[race] == "dwarf" && subraces[race][subrace] == "hill") {
+			hitPoints += level;
+			//hill dwarves get +1 hp per level
+		}
+		if (races[race] == "tiefling" && subraces[race][subrace] == "abyssal") {
+			int bonusHP = level / 2;
+			if (bonusHP == 0) {
+				bonusHP++;
+			}
+			hitPoints += bonusHP;
 		}
 
 		//print the results to std::out
@@ -909,12 +1075,20 @@ int main()
 		toPrint = "HP: " + std::to_string(hitPoints);
 		std::cout << toPrint << std::endl;
 
+			//race abilities
+		std::cout << std::endl << "Racial abilities: " << raceAbilities[race];
+		if (raceAbilities[race].compare("") != STR_COMPARE_TRUE) {
+			std::cout << ", ";
+		}
+		std::cout << subraceAbilities[race][subrace] << std::endl;
+
 			//class abilities
-		std::cout << classAbilities[class_][levelMainClass - 1] << std::endl;
+		std::cout << std::endl << "Class abilities: " << classAbilities[class_][levelMainClass - 1] << std::endl;
 		if (secondaryClass != -1) {
-			std::cout << classAbilities[secondaryClass][levelSecondaryClass - 1] << std::endl;
+			std::cout << std::endl << "Second class abilities: " << classAbilities[secondaryClass][levelSecondaryClass - 1] << std::endl;
 		}
 
 		std::getchar();
+		std::cout << std::endl << "-----------------------------------------" << std::endl << std::endl;
 	} while (true);
 }
