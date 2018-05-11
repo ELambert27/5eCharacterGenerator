@@ -1,6 +1,13 @@
 //5eCharacterGenerator
 //Makes a random D&D 5e character, either at the given level or at a random level if no level is given
 
+//TODO: can cut down on the amount of memory used by class abilities & subclass abilities by adjusting the system of
+	//choosing abilities to just list abilities gained at certain levels and the levels those abilities are gained
+	//Didn't do this before because not all classes & subclasses gain abilities at the same levels, but we can make
+	//it work with a little bit of extra work
+//TODO: multiclass currently limits to a maximum of 2 classes. could upgrade to doing any number of classes by switching to
+	//a variable-size data structure like std::vector
+
 #include <iostream>
 #include <string>
 #include <time.h>
@@ -387,6 +394,7 @@ static std::string* subclasses[] = {
 
 //class abilities
 #pragma region 
+#pragma region
 static std::string artificerAbilities[] = {
 	"magic item analysis",
 	"magic item analysis, tool expertise, wondrous invention",
@@ -409,6 +417,57 @@ static std::string artificerAbilities[] = {
 	"magic item analysis, tool expertise, wondrous invention (4 items), infuse magic, superior attunement (additional item), mechanical servant",
 	"magic item analysis, tool expertise, wondrous invention (5 items), infuse magic, superior attunement (additional item), mechanical servant, soul of artifice"
 };
+static std::string alchemistArtificerAbilities[] = {
+	"alchemist's satchel, alchemical formula (fire, acid, and one other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and one other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and two other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and two other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and two other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and two other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and two other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and two other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and three other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and three other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and three other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and three other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and three other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and four other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and four other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and four other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and five other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and five other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and five other)",
+	"alchemist's satchel, alchemical formula (fire, acid, and five other)"
+};
+	//alchemist has random alchemical formulas that need to be accounted for later
+static std::string gunslingerArtificerAbilites[] = {
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round, explosive round",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round, explosive round",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round, explosive round",
+	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round, explosive round"
+};
+	//gunslinger gains the mending cantrip, which needs to be accounted for later
+static std::string* artificerSubclassAbilities[] = {
+	alchemistArtificerAbilities, gunslingerArtificerAbilites
+};
+#pragma endregion artificer abilities
+#pragma region
 static std::string barbarianAbilities[] = {
 	"rage (2 uses, +2 damage), unarmored defense",
 	"rage (2 uses, +2 damage), unarmored defense, reckless attack, danger sense",
@@ -431,6 +490,146 @@ static std::string barbarianAbilities[] = {
 	"rage (6 uses, +4 damage), unarmored defense, reckless attack, danger sense, extra attack, fast movement, feral instinct, brutal critical (3 dice), relentless rage, persistent rage, indomitable might",
 	"rage (unlimited uses, +4 damage), unarmored defense, reckless attack, danger sense, extra attack, fast movement, feral instinct, brutal critical (3 dice), relentless rage, persistent rage, indomitable might, primal champion"
 };
+static std::string ancestralGuardianBarbarianAbilities[] = { 
+	"",
+	"",
+	"ancestral protectors",
+	"ancestral protectors",
+	"ancestral protectors",
+	"ancestral protectors, spirit shield",
+	"ancestral protectors, spirit shield",
+	"ancestral protectors, spirit shield",
+	"ancestral protectors, spirit shield",
+	"ancestral protectors, spirit shield, consult the spirits",
+	"ancestral protectors, spirit shield, consult the spirits",
+	"ancestral protectors, spirit shield, consult the spirits",
+	"ancestral protectors, spirit shield, consult the spirits",
+	"ancestral protectors, spirit shield, consult the spirits, vengeful ancestors",
+	"ancestral protectors, spirit shield, consult the spirits, vengeful ancestors",
+	"ancestral protectors, spirit shield, consult the spirits, vengeful ancestors",
+	"ancestral protectors, spirit shield, consult the spirits, vengeful ancestors",
+	"ancestral protectors, spirit shield, consult the spirits, vengeful ancestors",
+	"ancestral protectors, spirit shield, consult the spirits, vengeful ancestors",
+	"ancestral protectors, spirit shield, consult the spirits, vengeful ancestors"
+};
+static std::string battleragerBarbarianAbilities[] = { 
+	"",
+	"",
+	"battlerager armor",
+	"battlerager armor",
+	"battlerager armor",
+	"battlerager armor, reckless abandon",
+	"battlerager armor, reckless abandon",
+	"battlerager armor, reckless abandon",
+	"battlerager armor, reckless abandon",
+	"battlerager armor, reckless abandon, battlerager charge",
+	"battlerager armor, reckless abandon, battlerager charge",
+	"battlerager armor, reckless abandon, battlerager charge",
+	"battlerager armor, reckless abandon, battlerager charge",
+	"battlerager armor, reckless abandon, battlerager charge, spiked retribution",
+	"battlerager armor, reckless abandon, battlerager charge, spiked retribution",
+	"battlerager armor, reckless abandon, battlerager charge, spiked retribution",
+	"battlerager armor, reckless abandon, battlerager charge, spiked retribution",
+	"battlerager armor, reckless abandon, battlerager charge, spiked retribution",
+	"battlerager armor, reckless abandon, battlerager charge, spiked retribution",
+	"battlerager armor, reckless abandon, battlerager charge, spiked retribution"
+};
+static std::string berserkerBarbarianAbilities[] = { 
+	"", 
+	"",
+	"frenzy",
+	"frenzy",
+	"frenzy",
+	"frenzy, mindless rage",
+	"frenzy, mindless rage",
+	"frenzy, mindless rage",
+	"frenzy, mindless rage",
+	"frenzy, mindless rage, intimidating presence",
+	"frenzy, mindless rage, intimidating presence",
+	"frenzy, mindless rage, intimidating presence",
+	"frenzy, mindless rage, intimidating presence",
+	"frenzy, mindless rage, intimidating presence, retaliation",
+	"frenzy, mindless rage, intimidating presence, retaliation",
+	"frenzy, mindless rage, intimidating presence, retaliation",
+	"frenzy, mindless rage, intimidating presence, retaliation",
+	"frenzy, mindless rage, intimidating presence, retaliation",
+	"frenzy, mindless rage, intimidating presence, retaliation",
+	"frenzy, mindless rage, intimidating presence, retaliation"
+};
+static std::string stormHeraldBarbarianAbilities[] = { 
+	"",
+	"",
+	"storm aura",
+	"storm aura",
+	"storm aura",
+	"storm aura, storm soul",
+	"storm aura, storm soul",
+	"storm aura, storm soul",
+	"storm aura, storm soul",
+	"storm aura, storm soul, shielding storm",
+	"storm aura, storm soul, shielding storm",
+	"storm aura, storm soul, shielding storm",
+	"storm aura, storm soul, shielding storm",
+	"storm aura, storm soul, shielding storm, raging storm",
+	"storm aura, storm soul, shielding storm, raging storm",
+	"storm aura, storm soul, shielding storm, raging storm",
+	"storm aura, storm soul, shielding storm, raging storm",
+	"storm aura, storm soul, shielding storm, raging storm",
+	"storm aura, storm soul, shielding storm, raging storm",
+	"storm aura, storm soul, shielding storm, raging storm"
+};
+	//storm herald has a random environment that affects their rage that needs to be accounted for later
+static std::string totemBarbarianAbilities[] = { 
+	"",
+	"",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast, spirit walker",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast, spirit walker",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast, spirit walker",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast, spirit walker",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast, spirit walker, totemic attunement",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast, spirit walker, totemic attunement",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast, spirit walker, totemic attunement",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast, spirit walker, totemic attunement",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast, spirit walker, totemic attunement",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast, spirit walker, totemic attunement",
+	"spirit seeker (beast sense and speak with animals as rituals), totem spirit, aspect of the beast, spirit walker, totemic attunement"
+};
+	//totem has a random totem that needs to be accounted for later
+	//totem also gains some spells that need to be accounted for later, though they can only cast them as rituals
+static std::string zealotBarbarianAbilities[] = { 
+	"",
+	"",
+	"divine fury, warrior of the gods",
+	"divine fury, warrior of the gods",
+	"divine fury, warrior of the gods",
+	"divine fury, warrior of the gods, fanatical focus",
+	"divine fury, warrior of the gods, fanatical focus",
+	"divine fury, warrior of the gods, fanatical focus",
+	"divine fury, warrior of the gods, fanatical focus",
+	"divine fury, warrior of the gods, fanatical focus, zealous presence",
+	"divine fury, warrior of the gods, fanatical focus, zealous presence",
+	"divine fury, warrior of the gods, fanatical focus, zealous presence",
+	"divine fury, warrior of the gods, fanatical focus, zealous presence",
+	"divine fury, warrior of the gods, fanatical focus, zealous presence, rage beyond death",
+	"divine fury, warrior of the gods, fanatical focus, zealous presence, rage beyond death",
+	"divine fury, warrior of the gods, fanatical focus, zealous presence, rage beyond death",
+	"divine fury, warrior of the gods, fanatical focus, zealous presence, rage beyond death",
+	"divine fury, warrior of the gods, fanatical focus, zealous presence, rage beyond death",
+	"divine fury, warrior of the gods, fanatical focus, zealous presence, rage beyond death",
+	"divine fury, warrior of the gods, fanatical focus, zealous presence, rage beyond death"
+};
+static std::string* barbarianSubclassAbilities[] = {
+	ancestralGuardianBarbarianAbilities, battleragerBarbarianAbilities, berserkerBarbarianAbilities, stormHeraldBarbarianAbilities, totemBarbarianAbilities, zealotBarbarianAbilities
+};
+#pragma endregion barbarian abilities
+#pragma region
 static std::string bardAbilities[] = {
 	"bardic inspiration (d6)",
 	"bardic inspiration (d6), jack of all trades, song of rest (d6)",
@@ -453,6 +652,150 @@ static std::string bardAbilities[] = {
 	"bardic inspiration (d12), jack of all trades, song of rest (d12), expertise (x2), font of inspiration, countercharm, magical secrets (x3)",
 	"bardic inspiration (d12), jack of all trades, song of rest (d12), expertise (x2), font of inspiration, countercharm, magical secrets (x3), superior inspiration"
 };
+static std::string glamourBardAbilities[] = {
+	"",
+	"",
+	"mantle of inspiration, enthralling performance",
+	"mantle of inspiration, enthralling performance",
+	"mantle of inspiration, enthralling performance",
+	"mantle of inspiration, enthralling performance, mantle of majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty, unbreakable majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty, unbreakable majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty, unbreakable majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty, unbreakable majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty, unbreakable majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty, unbreakable majesty",
+	"mantle of inspiration, enthralling performance, mantle of majesty, unbreakable majesty"
+};
+static std::string loreBardAbilities[] = {
+	"",
+	"",
+	"+3 skill proficiencies, cutting words",
+	"+3 skill proficiencies, cutting words",
+	"+3 skill proficiencies, cutting words",
+	"+3 skill proficiencies, cutting words, additional magical secrets",
+	"+3 skill proficiencies, cutting words, additional magical secrets",
+	"+3 skill proficiencies, cutting words, additional magical secrets",
+	"+3 skill proficiencies, cutting words, additional magical secrets",
+	"+3 skill proficiencies, cutting words, additional magical secrets",
+	"+3 skill proficiencies, cutting words, additional magical secrets",
+	"+3 skill proficiencies, cutting words, additional magical secrets",
+	"+3 skill proficiencies, cutting words, additional magical secrets",
+	"+3 skill proficiencies, cutting words, additional magical secrets, peerless skill",
+	"+3 skill proficiencies, cutting words, additional magical secrets, peerless skill",
+	"+3 skill proficiencies, cutting words, additional magical secrets, peerless skill",
+	"+3 skill proficiencies, cutting words, additional magical secrets, peerless skill",
+	"+3 skill proficiencies, cutting words, additional magical secrets, peerless skill",
+	"+3 skill proficiencies, cutting words, additional magical secrets, peerless skill",
+	"+3 skill proficiencies, cutting words, additional magical secrets, peerless skill"
+};
+	//lore bard has 3 bonus skill proficiencies that need to be accounted for later
+	//lore bard also has additional magical secrets that need to be accounted for later
+static std::string satireBardAbilities[] = {
+	"",
+	"",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight, fool's luck",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight, fool's luck",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight, fool's luck",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight, fool's luck",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight, fool's luck",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight, fool's luck",
+	"proficiency in thieves tools/sleight of hand/one other skill, tumbling fool, fool's insight, fool's luck",
+};
+	//satire bard has additional skill & tool proficiencies that need to be accounted for later
+static std::string swordBardAbilities[] = {
+	"",
+	"",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack, master's flourish",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack, master's flourish",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack, master's flourish",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack, master's flourish",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack, master's flourish",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack, master's flourish",
+	"proficiency with scimitars/medium armor, can use proficient weapons as spellcasting foci, fighting style, blade flourish, extra attack, master's flourish"
+};
+	//sword bard gains additional weapon and armor proficiencies that need to be accounted for later
+	//sword bard gains a random fighting style that needs to be accounted for later
+static std::string valorBardAbilities[] = {
+	"",
+	"",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack, battle magic",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack, battle magic",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack, battle magic",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack, battle magic",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack, battle magic",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack, battle magic",
+	"proficiency with medium armor/shields/martial weapons, combat inspiration, extra attack, battle magic"
+};
+static std::string whisperBardAbilities[] = {
+	"",
+	"",
+	"psychic blades, words of terror",
+	"psychic blades, words of terror",
+	"psychic blades, words of terror",
+	"psychic blades, words of terror, mantle of whispers",
+	"psychic blades, words of terror, mantle of whispers",
+	"psychic blades, words of terror, mantle of whispers",
+	"psychic blades, words of terror, mantle of whispers",
+	"psychic blades, words of terror, mantle of whispers",
+	"psychic blades, words of terror, mantle of whispers",
+	"psychic blades, words of terror, mantle of whispers",
+	"psychic blades, words of terror, mantle of whispers",
+	"psychic blades, words of terror, mantle of whispers, shadow lore",
+	"psychic blades, words of terror, mantle of whispers, shadow lore",
+	"psychic blades, words of terror, mantle of whispers, shadow lore",
+	"psychic blades, words of terror, mantle of whispers, shadow lore",
+	"psychic blades, words of terror, mantle of whispers, shadow lore",
+	"psychic blades, words of terror, mantle of whispers, shadow lore",
+	"psychic blades, words of terror, mantle of whispers, shadow lore"
+};
+static std::string* bardSubclassAbilities[] = {
+	glamourBardAbilities, loreBardAbilities, satireBardAbilities, swordBardAbilities, valorBardAbilities, whisperBardAbilities
+};
+#pragma endregion bard abilities
+#pragma region
 static std::string clericAbilities[] = {
 	"", 
 	"channel divinity (1/rest)",
@@ -475,6 +818,334 @@ static std::string clericAbilities[] = {
 	"channel divinity (3/rest), destroy undead (cr 4), divine intervention",
 	"channel divinity (3/rest), destroy undead (cr 4), divine intervention improved"
 };
+static std::string arcanaClericAbilities[] = {
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting, arcane mastery (gain bonus wizard spells)",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting, arcane mastery (gain bonus wizard spells)",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting, arcane mastery (gain bonus wizard spells)",
+	"bonus domain spells, proficiency in arcana, gain 2 wizard cantrips, channel divinity: arcane abjuration, spell breaker, potent spellcasting, arcane mastery (gain bonus wizard spells)"
+};
+	//arcana clerics gain proficiency in arcana which needs to be accounted for later
+	//arcana clerics gain 2 bonus wizard cantrips which needs to be accounted for later
+static std::string cityClericAbilities[] = {
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike, express transit",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike, express transit",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike, express transit",
+	"bonus domain spells, gain on/off cantrip, proficiency with sidearms/vehicles (land), heart of the city, channel divinity: spirits of the city, block watch, divine strike, express transit"
+};
+	//city clerics gain a bonus cantrip that needs to be accounted for later
+	//city clerics gain bonus tool & weapon proficiencies that need to be accounted for later
+static std::string deathClericAbilities[] = {
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike, improved reaper",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike, improved reaper",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike, improved reaper",
+	"bonus domain spells, proficiency with martial weapons, bonus necromancy cantrip, reaper, channel divinity: touch of death, inescapable destruction, divine strike, improved reaper"
+};
+	//death clerics gain a bonus necromancy cantrip that needs to be accounted for later
+static std::string forgeClericAbilities[] = {
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike, saint of forge and fire",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike, saint of forge and fire",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike, saint of forge and fire",
+	"bonus domain spells, proficiency with heavy armor/smith's tools, blessing of the forge, channel divinity: artisan's blessing, soul of the forge, divine strike, saint of forge and fire"
+};
+	//forge clerics gain bonus proficiencies that need to be accounted for later
+static std::string graveClericAbilities[] = {
+	"bonus domain spells, circle of mortality, eyes of the grave",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting, keeper of souls",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting, keeper of souls",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting, keeper of souls",
+	"bonus domain spells, circle of mortality, eyes of the grave, channel divinity: path to the grave, sentinel at death's door, potent spellcasting, keeper of souls"
+};
+static std::string knowledgeClericAbilities[] = {
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting, visions of the past",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting, visions of the past",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting, visions of the past",
+	"bonus domain spells, proficiency in 2 languages, proficiency and expertise in (2 of) arcana/history/nature/religion, channel divinity: knowledge of the ages, channel divinity: read thoughts, potent spellcasting, visions of the past"
+};
+	//knowledge clerics gain language and skill proficiencies that need to be accounted for later
+static std::string lifeClericAbilities[] = {
+	"bonus domain spells, proficiency with heavy armor, disciple of life",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike, supreme healing",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike, supreme healing",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike, supreme healing",
+	"bonus domain spells, proficiency with heavy armor, disciple of life, channel divinity: preserve life, blessed healer, divine strike, supreme healing"
+};
+	//life clerics gain bonus armor proficiency that needs to be accounted for later
+static std::string lightClericAbilities[] = {
+	"bonus domain spells, learn light cantrip, warding flare",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting, corona of light",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting, corona of light",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting, corona of light",
+	"bonus domain spells, learn light cantrip, warding flare, channel divinity: radiance of the dawn, improved flare, potent spellcasting, corona of light"
+};
+	//light clerics gain the light cantrip, which needs to be accounted for later
+static std::string natureClericAbilities[] = {
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike, master of nature",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike, master of nature",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike, master of nature",
+	"bonus domain spells, learn one druid cantrip, proficiency in (1 of) animal handling/nature/survival, proficiency with heavy armor, channel divinity: charm animals and plants, dampen elements, divine strike, master of nature"
+};
+	//nature clerics have bonus spells & skills & armor, which need to be accounted for later
+static std::string protectionClericAbilities[] = {
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike, indomitable defense",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike, indomitable defense",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike, indomitable defense",
+	"bonus domain spells, proficiency with heavy armor, shield of the faithful, channel divinity: radiant defense, blessed healer, divine strike, indomitable defense"
+};
+	//protection clerics have heavy armor prof, which needs to be accounted for later
+static std::string tempestClericAbilities[] = {
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike, stormborn",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike, stormborn",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike, stormborn",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, wrath of the storm, channel divinity: destructive wrath, thunderbolt strike, divine strike, stormborn"
+};
+	//tempest clerics gain martial weapon & heavy armor proficiencies, which need to be accounted for later
+static std::string trickeryClericAbilities[] = {
+	"bonus domain spells, blessing of the trickster",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike, improved duplicity",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike, improved duplicity",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike, improved duplicity",
+	"bonus domain spells, blessing of the trickster, channel divinity: invoke duplicity, cloak of shadows, divine strike, improved duplicity"
+};
+static std::string warClericAbilities[] = {
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike, avatar of battle",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike, avatar of battle",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike, avatar of battle",
+	"bonus domain spells, proficiency with martial weapons/heavy armor, war priest, channel divinity: guided strike, channel divinity: war god's blessing, divine strike, avatar of battle"
+};
+	//war clerics gain weapon & armor proficiencies that need to be accounted for later
+static std::string orderClericAbilities[] = {
+	"bonus domain spells, proficiency with heavy armor, voice of authority",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike, order's wrath",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike, order's wrath",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike, order's wrath",
+	"bonus domain spells, proficiency with heavy armor, voice of authority, channel divinity: order's demand, order's dominion, divine strike, order's wrath"
+};
+	//order clerics gain armor proficiency which needs to be acccounted for later
+static std::string* clericSubclassAbilities[] = {
+	arcanaClericAbilities, cityClericAbilities, deathClericAbilities, forgeClericAbilities, graveClericAbilities, knowledgeClericAbilities, lifeClericAbilities, lightClericAbilities, natureClericAbilities, protectionClericAbilities, tempestClericAbilities, trickeryClericAbilities, warClericAbilities, orderClericAbilities
+};
+	//all cleric subclasses gain access to bonus spells that need to be accounted for later
+#pragma endregion cleric abilities
+#pragma region
 static std::string druidAbilities[] = {
 	"druidic language",
 	"druidic language, wild shape (max cr 1/4, no flying or swimming)",
@@ -497,6 +1168,145 @@ static std::string druidAbilities[] = {
 	"druidic language, wild shape (max cr 1), timeless body, beast spells",
 	"druidic language, wild shape (max cr 1), timeless body, beast spells, archdruid"
 };
+static std::string dreamsDruidAbilities[] = {
+	"",
+	"balm of the summer court",
+	"balm of the summer court",
+	"balm of the summer court",
+	"balm of the summer court",
+	"balm of the summer court, hearth of moonlight and shadow",
+	"balm of the summer court, hearth of moonlight and shadow",
+	"balm of the summer court, hearth of moonlight and shadow",
+	"balm of the summer court, hearth of moonlight and shadow",
+	"balm of the summer court, hearth of moonlight and shadow, hidden paths",
+	"balm of the summer court, hearth of moonlight and shadow, hidden paths",
+	"balm of the summer court, hearth of moonlight and shadow, hidden paths",
+	"balm of the summer court, hearth of moonlight and shadow, hidden paths",
+	"balm of the summer court, hearth of moonlight and shadow, hidden paths, walker in dreams",
+	"balm of the summer court, hearth of moonlight and shadow, hidden paths, walker in dreams",
+	"balm of the summer court, hearth of moonlight and shadow, hidden paths, walker in dreams",
+	"balm of the summer court, hearth of moonlight and shadow, hidden paths, walker in dreams",
+	"balm of the summer court, hearth of moonlight and shadow, hidden paths, walker in dreams",
+	"balm of the summer court, hearth of moonlight and shadow, hidden paths, walker in dreams",
+	"balm of the summer court, hearth of moonlight and shadow, hidden paths, walker in dreams"
+};
+static std::string landDruidAbilities[] = {
+	"",
+	"bonus druid cantrip, natural recovery",
+	"bonus druid cantrip, natural recovery, bonus environmental spells",
+	"bonus druid cantrip, natural recovery, bonus environmental spells",
+	"bonus druid cantrip, natural recovery, bonus environmental spells",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride, nature's ward",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride, nature's ward",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride, nature's ward",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride, nature's ward",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride, nature's ward, nature's sanctuary",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride, nature's ward, nature's sanctuary",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride, nature's ward, nature's sanctuary",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride, nature's ward, nature's sanctuary",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride, nature's ward, nature's sanctuary",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride, nature's ward, nature's sanctuary",
+	"bonus druid cantrip, natural recovery, bonus environmental spells, land's stride, nature's ward, nature's sanctuary"
+};
+	//land druid gains bonus cantrips/spells which need to be accounted for later
+static std::string moonDruidAbilities[] = {
+	"",
+	"combat wild shape, circle forms",
+	"combat wild shape, circle forms",
+	"combat wild shape, circle forms",
+	"combat wild shape, circle forms",
+	"combat wild shape, circle forms, primal strike",
+	"combat wild shape, circle forms, primal strike",
+	"combat wild shape, circle forms, primal strike",
+	"combat wild shape, circle forms, primal strike",
+	"combat wild shape, circle forms, primal strike, elemental wild shape",
+	"combat wild shape, circle forms, primal strike, elemental wild shape",
+	"combat wild shape, circle forms, primal strike, elemental wild shape",
+	"combat wild shape, circle forms, primal strike, elemental wild shape",
+	"combat wild shape, circle forms, primal strike, elemental wild shape, thousand forms",
+	"combat wild shape, circle forms, primal strike, elemental wild shape, thousand forms",
+	"combat wild shape, circle forms, primal strike, elemental wild shape, thousand forms",
+	"combat wild shape, circle forms, primal strike, elemental wild shape, thousand forms",
+	"combat wild shape, circle forms, primal strike, elemental wild shape, thousand forms",
+	"combat wild shape, circle forms, primal strike, elemental wild shape, thousand forms",
+	"combat wild shape, circle forms, primal strike, elemental wild shape, thousand forms"
+};
+static std::string shepherdDruidAbilities[] = {
+	"",
+	"speech of the woods, spirit totem",
+	"speech of the woods, spirit totem",
+	"speech of the woods, spirit totem",
+	"speech of the woods, spirit totem",
+	"speech of the woods, spirit totem, mighty summoner",
+	"speech of the woods, spirit totem, mighty summoner",
+	"speech of the woods, spirit totem, mighty summoner",
+	"speech of the woods, spirit totem, mighty summoner",
+	"speech of the woods, spirit totem, mighty summoner, guardian spirit",
+	"speech of the woods, spirit totem, mighty summoner, guardian spirit",
+	"speech of the woods, spirit totem, mighty summoner, guardian spirit",
+	"speech of the woods, spirit totem, mighty summoner, guardian spirit",
+	"speech of the woods, spirit totem, mighty summoner, guardian spirit, faithful summons",
+	"speech of the woods, spirit totem, mighty summoner, guardian spirit, faithful summons",
+	"speech of the woods, spirit totem, mighty summoner, guardian spirit, faithful summons",
+	"speech of the woods, spirit totem, mighty summoner, guardian spirit, faithful summons",
+	"speech of the woods, spirit totem, mighty summoner, guardian spirit, faithful summons",
+	"speech of the woods, spirit totem, mighty summoner, guardian spirit, faithful summons",
+	"speech of the woods, spirit totem, mighty summoner, guardian spirit, faithful summons"
+};
+static std::string sporesDruidAbilities[] = {
+	"",
+	"gain chill touch cantrip, halo of spores, symbiotic entity",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation, spreading spores",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation, spreading spores",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation, spreading spores",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation, spreading spores",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation, spreading spores, fungul body",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation, spreading spores, fungul body",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation, spreading spores, fungul body",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation, spreading spores, fungul body",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation, spreading spores, fungul body",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation, spreading spores, fungul body",
+	"gain chill touch cantrip, halo of spores, symbiotic entity, bonus circle spells, fungul infestation, spreading spores, fungul body"
+};
+	//spores druid gains bonus cantrip/spells which need to be accounted for later
+static std::string twilightDruidAbilities[] = {
+	"",
+	"harvest's scythe",
+	"harvest's scythe",
+	"harvest's scythe",
+	"harvest's scythe",
+	"harvest's scythe, speech beyond the grave",
+	"harvest's scythe, speech beyond the grave",
+	"harvest's scythe, speech beyond the grave",
+	"harvest's scythe, speech beyond the grave",
+	"harvest's scythe, speech beyond the grave, watcher at the threshold",
+	"harvest's scythe, speech beyond the grave, watcher at the threshold",
+	"harvest's scythe, speech beyond the grave, watcher at the threshold",
+	"harvest's scythe, speech beyond the grave, watcher at the threshold",
+	"harvest's scythe, speech beyond the grave, watcher at the threshold, paths of the dead",
+	"harvest's scythe, speech beyond the grave, watcher at the threshold, paths of the dead",
+	"harvest's scythe, speech beyond the grave, watcher at the threshold, paths of the dead",
+	"harvest's scythe, speech beyond the grave, watcher at the threshold, paths of the dead",
+	"harvest's scythe, speech beyond the grave, watcher at the threshold, paths of the dead",
+	"harvest's scythe, speech beyond the grave, watcher at the threshold, paths of the dead",
+	"harvest's scythe, speech beyond the grave, watcher at the threshold, paths of the dead"
+};
+static std::string* druidSubclassAbilities[] = {
+	dreamsDruidAbilities, landDruidAbilities, moonDruidAbilities, shepherdDruidAbilities, sporesDruidAbilities, twilightDruidAbilities
+};
+#pragma endregion druid abilities
+#pragma region 
 static std::string fighterAbilities[] = {
 	"second wind",
 	"second wind, action surge (one use)",
@@ -520,6 +1330,263 @@ static std::string fighterAbilities[] = {
 	"second wind, action surge (two uses), extra attack (2), indomitable (three uses)",
 	"second wind, action surge (two uses), extra attack (3), indomitable (three uses)"
 };
+	//fighter gains things like fighting style that need to be accounted for later
+static std::string arcaneArcherFighterAbilities[] = {
+	"",
+	"",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (2 options)",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (2 options)",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (2 options)",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (2 options)",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (3 options), magic arrow, curving shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (3 options), magic arrow, curving shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (3 options), magic arrow, curving shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (4 options), magic arrow, curving shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (4 options), magic arrow, curving shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (4 options), magic arrow, curving shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (4 options), magic arrow, curving shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (4 options), magic arrow, curving shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (5 options), magic arrow, curving shot, ever-ready shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (5 options), magic arrow, curving shot, ever-ready shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (5 options), magic arrow, curving shot, ever-ready shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (5 options), magic arrow, curving shot, ever-ready shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (5 options), magic arrow, curving shot, ever-ready shot",
+	"proficiency in (1 of) arcana/nature, gain (1 of) prestidigitation/druidcraft cantrip, arcane shot (5 options), magic arrow, curving shot, ever-ready shot"
+};
+	//arcane archer gains skill, cantrip, and arcane shot options which need to be accounted for later
+static std::string purpleDragonKnightFighterAbilities[] = {
+	"",
+	"",
+	"rallying cry",
+	"rallying cry",
+	"rallying cry",
+	"rallying cry",
+	"rallying cry, royal envoy (bonus skill proficiency)",
+	"rallying cry, royal envoy (bonus skill proficiency)",
+	"rallying cry, royal envoy (bonus skill proficiency)",
+	"rallying cry, royal envoy (bonus skill proficiency), inspiring surge",
+	"rallying cry, royal envoy (bonus skill proficiency), inspiring surge",
+	"rallying cry, royal envoy (bonus skill proficiency), inspiring surge",
+	"rallying cry, royal envoy (bonus skill proficiency), inspiring surge",
+	"rallying cry, royal envoy (bonus skill proficiency), inspiring surge",
+	"rallying cry, royal envoy (bonus skill proficiency), inspiring surge, bulwark",
+	"rallying cry, royal envoy (bonus skill proficiency), inspiring surge, bulwark",
+	"rallying cry, royal envoy (bonus skill proficiency), inspiring surge, bulwark",
+	"rallying cry, royal envoy (bonus skill proficiency), inspiring surge, bulwark",
+	"rallying cry, royal envoy (bonus skill proficiency), inspiring surge, bulwark",
+	"rallying cry, royal envoy (bonus skill proficiency), inspiring surge, bulwark"
+};
+	//purple dragon knights gain bonus skills that need to be accounted for later
+static std::string battleMasterFighterAbilities[] = {
+	"",
+	"",
+	"combat superiority (3 maneuvers), proficiency with 1 type of artisan's tools",
+	"combat superiority (3 maneuvers), proficiency with 1 type of artisan's tools",
+	"combat superiority (3 maneuvers), proficiency with 1 type of artisan's tools",
+	"combat superiority (3 maneuvers), proficiency with 1 type of artisan's tools",
+	"combat superiority (5 maneuvers), proficiency with 1 type of artisan's tools, know your enemy",
+	"combat superiority (5 maneuvers), proficiency with 1 type of artisan's tools, know your enemy",
+	"combat superiority (5 maneuvers), proficiency with 1 type of artisan's tools, know your enemy",
+	"combat superiority (7 maneuvers), proficiency with 1 type of artisan's tools, know your enemy, improved combat superiority",
+	"combat superiority (7 maneuvers), proficiency with 1 type of artisan's tools, know your enemy, improved combat superiority",
+	"combat superiority (7 maneuvers), proficiency with 1 type of artisan's tools, know your enemy, improved combat superiority",
+	"combat superiority (7 maneuvers), proficiency with 1 type of artisan's tools, know your enemy, improved combat superiority",
+	"combat superiority (7 maneuvers), proficiency with 1 type of artisan's tools, know your enemy, improved combat superiority",
+	"combat superiority (9 maneuvers), proficiency with 1 type of artisan's tools, know your enemy, improved combat superiority, relentless",
+	"combat superiority (9 maneuvers), proficiency with 1 type of artisan's tools, know your enemy, improved combat superiority, relentless",
+	"combat superiority (9 maneuvers), proficiency with 1 type of artisan's tools, know your enemy, improved combat superiority, relentless",
+	"combat superiority (9 maneuvers), proficiency with 1 type of artisan's tools, know your enemy, improved combat superiority, relentless",
+	"combat superiority (9 maneuvers), proficiency with 1 type of artisan's tools, know your enemy, improved combat superiority, relentless",
+	"combat superiority (9 maneuvers), proficiency with 1 type of artisan's tools, know your enemy, improved combat superiority, relentless"
+};
+	//battle master gains tool proficiencies which need to be accounted for later
+static std::string bruteFighterAbilities[] = {
+	"",
+	"",
+	"brute force (1d4)",
+	"brute force (1d4)",
+	"brute force (1d4)",
+	"brute force (1d4)",
+	"brute force (1d4), brutish durability",
+	"brute force (1d4), brutish durability",
+	"brute force (1d4), brutish durability",
+	"brute force (1d6), brutish durability, additional fighting style",
+	"brute force (1d6), brutish durability, additional fighting style",
+	"brute force (1d6), brutish durability, additional fighting style",
+	"brute force (1d6), brutish durability, additional fighting style",
+	"brute force (1d6), brutish durability, additional fighting style",
+	"brute force (1d6), brutish durability, additional fighting style, devastating critical",
+	"brute force (1d8), brutish durability, additional fighting style, devastating critical",
+	"brute force (1d8), brutish durability, additional fighting style, devastating critical",
+	"brute force (1d8), brutish durability, additional fighting style, devastating critical, survivor",
+	"brute force (1d8), brutish durability, additional fighting style, devastating critical, survivor",
+	"brute force (1d10), brutish durability, additional fighting style, devastating critical, survivor"
+};
+	//brute fighters gain bonus fighting style that needs to be accounted for
+static std::string cavalierFighterAbiltiies[] = {
+	"",
+	"",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver, hold the line",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver, hold the line",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver, hold the line",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver, hold the line",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver, hold the line",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver, hold the line, ferocious charger",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver, hold the line, ferocious charger",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver, hold the line, ferocious charger",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver, hold the line, ferocious charger, vigilant defender",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver, hold the line, ferocious charger, vigilant defender",
+	"proficiency in (1 of) animal handling/history/insight/performance/persuasion/one language, born to the saddle, unwavering mark, warding maneuver, hold the line, ferocious charger, vigilant defender"
+};
+	//cavalier gains bonus skill or language proficiency which needs to be accounted for later
+static std::string championFighterAbilities[] = {
+	"",
+	"",
+	"improved critical",
+	"improved critical",
+	"improved critical",
+	"improved critical",
+	"improved critical, remarkable athlete",
+	"improved critical, remarkable athlete",
+	"improved critical, remarkable athlete",
+	"improved critical, remarkable athlete, additional fighting style",
+	"improved critical, remarkable athlete, additional fighting style",
+	"improved critical, remarkable athlete, additional fighting style",
+	"improved critical, remarkable athlete, additional fighting style",
+	"improved critical, remarkable athlete, additional fighting style",
+	"superior critical, remarkable athlete, additional fighting style",
+	"superior critical, remarkable athlete, additional fighting style",
+	"superior critical, remarkable athlete, additional fighting style",
+	"superior critical, remarkable athlete, additional fighting style, survivor",
+	"superior critical, remarkable athlete, additional fighting style, survivor",
+	"superior critical, remarkable athlete, additional fighting style, survivor"
+};
+	//champion gains an additional fighting style that needs to be accounted for later
+static std::string eldritchKnightFighterAbilities[] = {
+	"",
+	"",
+	"spellcasting, weapon bond",
+	"spellcasting, weapon bond",
+	"spellcasting, weapon bond",
+	"spellcasting, weapon bond",
+	"spellcasting, weapon bond, war magic",
+	"spellcasting, weapon bond, war magic",
+	"spellcasting, weapon bond, war magic",
+	"spellcasting, weapon bond, war magic, eldritch strike",
+	"spellcasting, weapon bond, war magic, eldritch strike",
+	"spellcasting, weapon bond, war magic, eldritch strike",
+	"spellcasting, weapon bond, war magic, eldritch strike",
+	"spellcasting, weapon bond, war magic, eldritch strike",
+	"spellcasting, weapon bond, war magic, eldritch strike, arcane charge",
+	"spellcasting, weapon bond, war magic, eldritch strike, arcane charge",
+	"spellcasting, weapon bond, war magic, eldritch strike, arcane charge",
+	"spellcasting, weapon bond, improved war magic, eldritch strike, arcane charge",
+	"spellcasting, weapon bond, improved war magic, eldritch strike, arcane charge",
+	"spellcasting, weapon bond, improved war magic, eldritch strike, arcane charge"
+};
+	//eldritch knight gains spells, which needs to be accounted for later
+static std::string knightFighterAbilities[] = {
+	"",
+	"",
+	"born to the saddle, implacable mark",
+	"born to the saddle, implacable mark",
+	"born to the saddle, implacable mark",
+	"born to the saddle, implacable mark",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language)",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language)",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language)",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language), hold the line",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language), hold the line",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language), hold the line",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language), hold the line",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language), hold the line",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language), hold the line, rapid strike",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language), hold the line, rapid strike",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language), hold the line, rapid strike",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language), hold the line, rapid strike, defender's blade",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language), hold the line, rapid strike, defender's blade",
+	"born to the saddle, implacable mark, noble cavalry (bonus skills or language), hold the line, rapid strike, defender's blade"
+};
+	//knight fighter has bonus skills or language that needs to be accounted for later
+static std::string samuraiFighterAbilities[] = {
+	"",
+	"",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier, tireless spirit",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier, tireless spirit",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier, tireless spirit",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier, tireless spirit",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier, tireless spirit",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier, tireless spirit, rapid strike",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier, tireless spirit, rapid strike",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier, tireless spirit, rapid strike",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier, tireless spirit, rapid strike, strength before death",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier, tireless spirit, rapid strike, strength before death",
+	"proficiency in (1 of) history/insight/performance/persuasion/one language, fighting spirit, elegant courtier, tireless spirit, rapid strike, strength before death"
+};
+	//samurai gains bonus skill or language that needs to be accounted for later
+static std::string sharpshooterFighterAbilities[] = {
+	"",
+	"",
+	"steady aim",
+	"steady aim",
+	"steady aim",
+	"steady aim",
+	"steady aim, careful eyes",
+	"steady aim, careful eyes",
+	"steady aim, careful eyes",
+	"steady aim, careful eyes, close-quarters shooting",
+	"steady aim, careful eyes, close-quarters shooting",
+	"steady aim, careful eyes, close-quarters shooting",
+	"steady aim, careful eyes, close-quarters shooting",
+	"steady aim, careful eyes, close-quarters shooting",
+	"steady aim, careful eyes, close-quarters shooting, rapid strike",
+	"steady aim, careful eyes, close-quarters shooting, rapid strike",
+	"steady aim, careful eyes, close-quarters shooting, rapid strike",
+	"steady aim, careful eyes, close-quarters shooting, rapid strike, snap shot",
+	"steady aim, careful eyes, close-quarters shooting, rapid strike, snap shot",
+	"steady aim, careful eyes, close-quarters shooting, rapid strike, snap shot"
+};
+static std::string monsterHunterFighterAbilities[] = {
+	"",
+	"",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer, improved combat superiority",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer, improved combat superiority",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer, improved combat superiority",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer, improved combat superiority",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer, improved combat superiority",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer, improved combat superiority, relentless",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer, improved combat superiority, relentless",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer, improved combat superiority, relentless",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer, improved combat superiority, relentless",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer, improved combat superiority, relentless",
+	"proficiency in (2 of) arcana/history/insight/investigation/nature/perception/one tool, combat superiority, hunter's mysticism, monster slayer, improved combat superiority, relentless"
+};
+static std::string* fighterSubclassAbilities[] = {
+	arcaneArcherFighterAbilities, purpleDragonKnightFighterAbilities, battleMasterFighterAbilities, bruteFighterAbilities, cavalierFighterAbiltiies, championFighterAbilities, eldritchKnightFighterAbilities, knightFighterAbilities, samuraiFighterAbilities, sharpshooterFighterAbilities, monsterHunterFighterAbilities
+};
+#pragma endregion fighter abilities
+#pragma region
 static std::string monkAbilities[] = {
 	"unarmored defense, martial arts (1d4)",
 	"unarmored defense, martial arts (1d4), ki (2 points), unarmored movement (+10 ft)",
@@ -542,6 +1609,192 @@ static std::string monkAbilities[] = {
 	"unarmored defense, martial arts (1d10), ki (19 points), unarmored movement improved (+30 ft), deflect missiles, slow fall, extra attack, stunning strike, ki-empowered strikes, evasion, stillness of mind, purity of body, tongue of the sun and moon, diamond soul, timeless body, empty body",
 	"unarmored defense, martial arts (1d10), ki (20 points), unarmored movement improved (+30 ft), deflect missiles, slow fall, extra attack, stunning strike, ki-empowered strikes, evasion, stillness of mind, purity of body, tongue of the sun and moon, diamond soul, timeless body, empty body, perfect self"
 };
+static std::string drunkenMasterMonkAbilities[] = {
+	"",
+	"",
+	"proficiency with performance/brewer's tools, drunken technique",
+	"proficiency with performance/brewer's tools, drunken technique",
+	"proficiency with performance/brewer's tools, drunken technique",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway, drunkard's luck",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway, drunkard's luck",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway, drunkard's luck",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway, drunkard's luck",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway, drunkard's luck",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway, drunkard's luck",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway, drunkard's luck, intoxicated frenzy",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway, drunkard's luck, intoxicated frenzy",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway, drunkard's luck, intoxicated frenzy",
+	"proficiency with performance/brewer's tools, drunken technique, tipsy sway, drunkard's luck, intoxicated frenzy"
+};
+	//drunken master gains bonus skill & tool proficiencies that need to be accounted for later
+static std::string fourElementsMonkAbilities[] = {
+	"",
+	"",
+	"disciple of the elements (elemental attunement and 1 other)",
+	"disciple of the elements (elemental attunement and 1 other)",
+	"disciple of the elements (elemental attunement and 1 other)",
+	"disciple of the elements (elemental attunement and 2 others)",
+	"disciple of the elements (elemental attunement and 2 others)",
+	"disciple of the elements (elemental attunement and 2 others)",
+	"disciple of the elements (elemental attunement and 2 others)",
+	"disciple of the elements (elemental attunement and 2 others)",
+	"disciple of the elements (elemental attunement and 3 others)",
+	"disciple of the elements (elemental attunement and 3 others)",
+	"disciple of the elements (elemental attunement and 3 others)",
+	"disciple of the elements (elemental attunement and 3 others)",
+	"disciple of the elements (elemental attunement and 3 others)",
+	"disciple of the elements (elemental attunement and 3 others)",
+	"disciple of the elements (elemental attunement and 4 others)",
+	"disciple of the elements (elemental attunement and 4 others)",
+	"disciple of the elements (elemental attunement and 4 others)",
+	"disciple of the elements (elemental attunement and 4 others)"
+};
+	//four elements gains elemental abilities/spells which need to be accounted for later
+static std::string kensaiMonkAbilities[] = {
+	"",
+	"",
+	"path of the kensai",
+	"path of the kensai",
+	"path of the kensai",
+	"path of the kensai, one with the blade",
+	"path of the kensai, one with the blade",
+	"path of the kensai, one with the blade",
+	"path of the kensai, one with the blade",
+	"path of the kensai, one with the blade",
+	"path of the kensai, one with the blade, sharpen the blade",
+	"path of the kensai, one with the blade, sharpen the blade",
+	"path of the kensai, one with the blade, sharpen the blade",
+	"path of the kensai, one with the blade, sharpen the blade",
+	"path of the kensai, one with the blade, sharpen the blade",
+	"path of the kensai, one with the blade, sharpen the blade",
+	"path of the kensai, one with the blade, sharpen the blade, unerring accuracy",
+	"path of the kensai, one with the blade, sharpen the blade, unerring accuracy",
+	"path of the kensai, one with the blade, sharpen the blade, unerring accuracy",
+	"path of the kensai, one with the blade, sharpen the blade, unerring accuracy"
+};
+static std::string longDeathMonkAbilities[] = {
+	"",
+	"",
+	"touch of death",
+	"touch of death",
+	"touch of death",
+	"touch of death, hour of reaping",
+	"touch of death, hour of reaping",
+	"touch of death, hour of reaping",
+	"touch of death, hour of reaping",
+	"touch of death, hour of reaping",
+	"touch of death, hour of reaping, mastery of death",
+	"touch of death, hour of reaping, mastery of death",
+	"touch of death, hour of reaping, mastery of death",
+	"touch of death, hour of reaping, mastery of death",
+	"touch of death, hour of reaping, mastery of death",
+	"touch of death, hour of reaping, mastery of death",
+	"touch of death, hour of reaping, mastery of death, touch of the long death",
+	"touch of death, hour of reaping, mastery of death, touch of the long death",
+	"touch of death, hour of reaping, mastery of death, touch of the long death",
+	"touch of death, hour of reaping, mastery of death, touch of the long death"
+};
+static std::string openHandMonkAbilities[] = {
+	"",
+	"",
+	"open hand technique",
+	"open hand technique",
+	"open hand technique",
+	"open hand technique, wholeness of body",
+	"open hand technique, wholeness of body",
+	"open hand technique, wholeness of body",
+	"open hand technique, wholeness of body",
+	"open hand technique, wholeness of body",
+	"open hand technique, wholeness of body, tranquility",
+	"open hand technique, wholeness of body, tranquility",
+	"open hand technique, wholeness of body, tranquility",
+	"open hand technique, wholeness of body, tranquility",
+	"open hand technique, wholeness of body, tranquility",
+	"open hand technique, wholeness of body, tranquility",
+	"open hand technique, wholeness of body, tranquility, quivering palm",
+	"open hand technique, wholeness of body, tranquility, quivering palm",
+	"open hand technique, wholeness of body, tranquility, quivering palm",
+	"open hand technique, wholeness of body, tranquility, quivering palm"
+};
+static std::string shadowMonkAbilities[] = {
+	"",
+	"",
+	"shadow arts",
+	"shadow arts",
+	"shadow arts",
+	"shadow arts, shadow step",
+	"shadow arts, shadow step",
+	"shadow arts, shadow step",
+	"shadow arts, shadow step",
+	"shadow arts, shadow step",
+	"shadow arts, shadow step, cloak of shadows",
+	"shadow arts, shadow step, cloak of shadows",
+	"shadow arts, shadow step, cloak of shadows",
+	"shadow arts, shadow step, cloak of shadows",
+	"shadow arts, shadow step, cloak of shadows",
+	"shadow arts, shadow step, cloak of shadows",
+	"shadow arts, shadow step, cloak of shadows, opportunist",
+	"shadow arts, shadow step, cloak of shadows, opportunist",
+	"shadow arts, shadow step, cloak of shadows, opportunist",
+	"shadow arts, shadow step, cloak of shadows, opportunist"
+};
+static std::string sunSoulMonkAbilities[] = {
+	"",
+	"",
+	"radiant sun bolt",
+	"radiant sun bolt",
+	"radiant sun bolt",
+	"radiant sun bolt, searing arc strike",
+	"radiant sun bolt, searing arc strike",
+	"radiant sun bolt, searing arc strike",
+	"radiant sun bolt, searing arc strike",
+	"radiant sun bolt, searing arc strike",
+	"radiant sun bolt, searing arc strike, searing sunburst",
+	"radiant sun bolt, searing arc strike, searing sunburst",
+	"radiant sun bolt, searing arc strike, searing sunburst",
+	"radiant sun bolt, searing arc strike, searing sunburst",
+	"radiant sun bolt, searing arc strike, searing sunburst",
+	"radiant sun bolt, searing arc strike, searing sunburst",
+	"radiant sun bolt, searing arc strike, searing sunburst, sun shield",
+	"radiant sun bolt, searing arc strike, searing sunburst, sun shield",
+	"radiant sun bolt, searing arc strike, searing sunburst, sun shield",
+	"radiant sun bolt, searing arc strike, searing sunburst, sun shield"
+};
+static std::string tranquilityMonkAbilities[] = {
+	"",
+	"",
+	"path of tranquility, healing hands",
+	"path of tranquility, healing hands",
+	"path of tranquility, healing hands",
+	"path of tranquility, healing hands, emissary of peace",
+	"path of tranquility, healing hands, emissary of peace",
+	"path of tranquility, healing hands, emissary of peace",
+	"path of tranquility, healing hands, emissary of peace",
+	"path of tranquility, healing hands, emissary of peace",
+	"path of tranquility, healing hands, emissary of peace, douse the flames of war",
+	"path of tranquility, healing hands, emissary of peace, douse the flames of war",
+	"path of tranquility, healing hands, emissary of peace, douse the flames of war",
+	"path of tranquility, healing hands, emissary of peace, douse the flames of war",
+	"path of tranquility, healing hands, emissary of peace, douse the flames of war",
+	"path of tranquility, healing hands, emissary of peace, douse the flames of war",
+	"path of tranquility, healing hands, emissary of peace, douse the flames of war, anger of a gentle soul",
+	"path of tranquility, healing hands, emissary of peace, douse the flames of war, anger of a gentle soul",
+	"path of tranquility, healing hands, emissary of peace, douse the flames of war, anger of a gentle soul",
+	"path of tranquility, healing hands, emissary of peace, douse the flames of war, anger of a gentle soul"
+};
+static std::string* monkSubclassAbilities[] = {
+	drunkenMasterMonkAbilities, fourElementsMonkAbilities, kensaiMonkAbilities, longDeathMonkAbilities, openHandMonkAbilities, shadowMonkAbilities, sunSoulMonkAbilities, tranquilityMonkAbilities
+};
+/*
+static std::string monkSubclass[] = { "drunken master", "four elements", "kensai", "long death", "open hand", "shadow", "sun soul", "tranquility" };
+*/
+#pragma endregion monk abilities
+#pragma region
 static std::string mysticAbilities[] = {
 	"psionics (1 talent, 1 discipline, 4 psi points, 2 psi limit)",
 	"psionics (1 talent, 1 discipline, 6 psi points, 2 psi limit), mystical recovery, telepathy",
@@ -565,6 +1818,150 @@ static std::string mysticAbilities[] = {
 	"psionics (4 talent, 8 discipline, 71 psi points, 7 psi limit), mystical recovery, telepathy, strength of mind, potent psionics (2d8), consumptive power, psionic mastery (4/day)",
 	"psionics (4 talent, 8 discipline, 71 psi points, 7 psi limit), mystical recovery, telepathy, strength of mind, potent psionics (2d8), consumptive power, psionic mastery (4/day), psionic body"
 };
+static std::string avatarMysticAbilities[] = {
+	"bonus avatar disciplines, proficiency with medium armor/shields",
+	"bonus avatar disciplines, proficiency with medium armor/shields",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing",	
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing, avatar of speed",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing, avatar of speed",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing, avatar of speed",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing, avatar of speed",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing, avatar of speed",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing, avatar of speed",
+	"bonus avatar disciplines, proficiency with medium armor/shields, avatar of battle, avatar of healing, avatar of speed"
+};
+	//avatar mystics gain bonus armor proficiencies that need to be accounted for later
+static std::string awakenedMysticAbilities[] = {
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge, spectral form",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge, spectral form",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge, spectral form",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge, spectral form",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge, spectral form",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge, spectral form",
+	"bonus awakened disciplines, proficiency with (2 of) animal handling/deception/insight/intimidation/investigation/perception/persuasion, psionic investigation, psionic surge, spectral form"
+};
+	//awakened mystics gain bonus skill proficiencies that need to be accounted for later
+static std::string immortalMysticAbilities[] = {
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total)",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total)",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health, immortal will",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health, immortal will",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health, immortal will",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health, immortal will",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health, immortal will",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health, immortal will",
+	"bonus immortal disciplines, immortal durability (bonus hp already included in hp total), psionic resilience, surge of health, immortal will"
+};
+	//immortal mystics gain bonus hit points, which are already taken into account 
+static std::string nomadMysticAbilities[] = {
+	"bonus nomad disciplines, breadth of knowledge",
+	"bonus nomad disciplines, breadth of knowledge",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation, effortless journey",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation, effortless journey",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation, effortless journey",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation, effortless journey",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation, effortless journey",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation, effortless journey",
+	"bonus nomad disciplines, breadth of knowledge, memory of one thousand steps, superior teleportation, effortless journey"
+};
+static std::string soulKnifeMysticAbilities[] = {
+	"proficiency in medium armor/martial weapons, soul knife",
+	"proficiency in medium armor/martial weapons, soul knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife, phantom knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife, phantom knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife, phantom knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife, phantom knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife, phantom knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife, phantom knife",
+	"proficiency in medium armor/martial weapons, soul knife, hone the blade, consumptive knife, phantom knife"
+};
+	//soul knife gains bonus weapon & armor proficiencies that need to be accounted for later
+static std::string wuJenMysticAbilities[] = {
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler, elemental mastery",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler, elemental mastery",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler, elemental mastery",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler, elemental mastery",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler, elemental mastery",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler, elemental mastery",
+	"bonus wu jen disciplines, proficiency with (2 of) animal handling/arcana/history/insight/medicine/nature/perception/religion/survival, elemental attunement, arcane dabbler, elemental mastery"
+};
+	//wu jen gains bonus proficiencies that need to be accounted for later
+	//wu jen also gains some spells which need to be accounted for later
+static std::string* mysticSubclassAbilities[] = {
+	avatarMysticAbilities, awakenedMysticAbilities, immortalMysticAbilities, nomadMysticAbilities, soulKnifeMysticAbilities, wuJenMysticAbilities
+};
+	//most mystic subclasses gain bonus psionic disciplines that need to be accounted for later
+#pragma endregion mystic abilities
+#pragma region
 static std::string paladinAbilities[] = {
 	"divine sense, lay on hands",
 	"divine sense, lay on hands, divine smite",
@@ -587,6 +1984,187 @@ static std::string paladinAbilities[] = {
 	"divine sense, lay on hands, improved divine smite, divine health, extra attack, improved aura of protection, improved aura of courage, cleansing touch",
 	"divine sense, lay on hands, improved divine smite, divine health, extra attack, improved aura of protection, improved aura of courage, cleansing touch"
 };
+static std::string ancientsPaladinAbilities[] = {
+	"",
+	"",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding, undying sentinel",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding, undying sentinel",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding, undying sentinel",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding, undying sentinel",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding, undying sentinel",
+	"oath spells, channel divinity: nature's wrath, channel divinity: turn the faithless, aura of warding, undying sentinel, elder champion"
+};
+static std::string conquestPaladinAbilities[] = {
+	"",
+	"",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest, scornful rebuke",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest, scornful rebuke",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest, scornful rebuke",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest, scornful rebuke",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest, scornful rebuke",
+	"oath spells, channel divinity: conquering presence, channel divinity: guided strike, aura of conquest, scornful rebuke, invincible conquerer"
+};
+static std::string crownPaladinAbilities[] = {
+	"",
+	"",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance, unyielding spirit",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance, unyielding spirit",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance, unyielding spirit",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance, unyielding spirit",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance, unyielding spirit",
+	"oath spells, channel divinity: champion challenge, channel divinity: turn the tide, divine allegiance, unyielding spirit, exalted champion"
+};
+static std::string devotionPaladinAbilities[] = {
+	"",
+	"",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion, purity of spirit",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion, purity of spirit",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion, purity of spirit",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion, purity of spirit",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion, purity of spirit",
+	"oath spells, channel divinity: sacred weapon, channel divinity: turn the unholy, aura of devotion, purity of spirit, holy nimbus"
+};
+static std::string redemptionPaladinAbilities[] = {
+	"",
+	"",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian, protective spirit",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian, protective spirit",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian, protective spirit",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian, protective spirit",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian, protective spirit",
+	"oath spells, channel divinity: emissary of peace, channel divinity: rebuke the violent, aura of the guardian, protective spirit, emissary of redemption"
+};
+static std::string treacheryPaladinAbilities[] = {
+	"",
+	"",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery, blackguard's escape",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery, blackguard's escape",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery, blackguard's escape",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery, blackguard's escape",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery, blackguard's escape",
+	"oath spells, channel divinity: conjure duplicate, channel divinity: poison strike, aura of treachery, blackguard's escape, icon of deceit"
+};
+static std::string vengeancePaladinAbilities[] = {
+	"",
+	"",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger, soul of vengeance",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger, soul of vengeance",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger, soul of vengeance",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger, soul of vengeance",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger, soul of vengeance",
+	"oath spells, channel divinity: abjure enemy, channel divinity: vow of enmity, relentless avenger, soul of vengeance, avenging angel"
+};
+static std::string oathbreakerPaladinAbilities[] = {
+	"",
+	"",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate, supernatural resistance",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate, supernatural resistance",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate, supernatural resistance",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate, supernatural resistance",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate, supernatural resistance",
+	"oathbreaker spells, channel divinity: control undead, channel divinity: dreadful aspect, aura of hate, supernatural resistance, dread lord"
+};
+static std::string* paladinSubclassAbilities[] = {
+	ancientsPaladinAbilities, conquestPaladinAbilities, crownPaladinAbilities, devotionPaladinAbilities, redemptionPaladinAbilities, treacheryPaladinAbilities, vengeancePaladinAbilities, oathbreakerPaladinAbilities
+};
+	//most paladin subclasses gain bonus spells which need to be accounted for later
+#pragma endregion paladin abilities
 static std::string rangerAbilities[] = {
 	"favored enemy, natural explorer",
 	"favored enemy, natural explorer",
@@ -609,6 +2187,9 @@ static std::string rangerAbilities[] = {
 	"favored enemy, natural explorer, primeval awareness, extra attack, land's stride, hide in plain sight, vanish, feral senses",
 	"favored enemy, natural explorer, primeval awareness, extra attack, land's stride, hide in plain sight, vanish, feral senses, foe slayer"
 };
+/*
+static std::string rangerSubclass[] = { "beast master", "dark stalker", "horizon walker", "hunter", "monster slayer", "primeval guardian" };
+*/
 static std::string rogueAbilities[] = {
 	"sneak attack (1d6), expertise, thieves' cant",
 	"sneak attack (1d6), expertise, thieves' cant, cunning action",
@@ -631,6 +2212,9 @@ static std::string rogueAbilities[] = {
 	"sneak attack (10d6), expertise (x2), thieves' cant, cunning action, uncanny dodge, evasion, reliable talent, blindsense, slippery mind, elusive",
 	"sneak attack (10d6), expertise (x2), thieves' cant, cunning action, uncanny dodge, evasion, reliable talent, blindsense, slippery mind, elusive, stroke of luck"
 };
+/*
+static std::string rogueSubclass[] = { "arcane trickster", "assassin", "inquisitive", "mastermind", "scout", "swashbuckler", "thief" };
+*/
 static std::string sorcererAbilities[] = {
 	"",
 	"font of magic (2 sorcerery points)",
@@ -653,6 +2237,9 @@ static std::string sorcererAbilities[] = {
 	"font of magic (19 sorcerery points), metamagic (4)",
 	"font of magic (20 sorcerery points), metamagic (4), sorcerous restoration"
 };
+/*
+static std::string sorcererSubclass[] = { "divine soul", "draconic", "phoenix", "sea", "shadow", "stone", "storm", "wild" };
+*/
 static std::string warlockAbilities[] = {
 	"",
 	"eldritch invocations (2)",
@@ -675,6 +2262,9 @@ static std::string warlockAbilities[] = {
 	"eldritch invocations (8), pact boon, mystic arcanum (9th)",
 	"eldritch invocations (8), pact boon, mystic arcanum (9th), eldritch master"
 };
+/*
+static std::string warlockSubclass[] = { "archfey", "celestial", "fiend", "ghost in the machine", "great old one", "hexblade", "raven queen", "seeker", "undying" };
+*/
 static std::string wizardAbilities[] = {
 	"arcane recovery",
 	"arcane recovery",
@@ -697,6 +2287,9 @@ static std::string wizardAbilities[] = {
 	"arcane recovery, spell mastery",
 	"arcane recovery, spell mastery, signature spell"
 };
+/*
+static std::string wizardSubclass[] = { "artificer", "bladesinger", "lore master", "abjuration", "conjuration", "divination", "enchantment", "evocation", "illusion", "invention", "necromancy", "transmutation", "technomancy", "theurgy", "war magic" };
+*/
 static std::string runeScribeAbilities[] = {
 	"rune lore, runic magic",
 	"rune lore, runic magic, runic discovery",
@@ -704,9 +2297,11 @@ static std::string runeScribeAbilities[] = {
 	"rune lore, runic magic, runic discovery (2), living rune",
 	"rune lore, runic magic, runic discovery (3), living rune, rune mastery"
 };
+//no subclasses to rune scribe
 static std::string emptyAbilities[] = {
 	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""
 };
+//no subclasses to empty abilities (multiclass I guess)
 static std::string* classAbilities[] = {
 	artificerAbilities, barbarianAbilities, bardAbilities, clericAbilities, druidAbilities, fighterAbilities, monkAbilities,
 	mysticAbilities, paladinAbilities, rangerAbilities, rogueAbilities, sorcererAbilities, warlockAbilities,
@@ -999,6 +2594,12 @@ int main()
 				bonusHP++;
 			}
 			hitPoints += bonusHP;
+		}
+		if (classes[class_].compare("mystic") == STR_COMPARE_TRUE && subclasses[class_][subclass].compare("immortal") == STR_COMPARE_TRUE) {
+			hitPoints += levelMainClass;
+		}
+		else if (classes[secondaryClass].compare("mystic") == STR_COMPARE_TRUE && subclasses[secondaryClass][secondarySubclass].compare("immortal") == STR_COMPARE_TRUE) {
+			hitPoints += levelSecondaryClass;
 		}
 
 		//print the results to std::out
