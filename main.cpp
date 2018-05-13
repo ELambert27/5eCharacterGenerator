@@ -7,6 +7,7 @@
 	//it work with a little bit of extra work
 //TODO: multiclass currently limits to a maximum of 2 classes. could upgrade to doing any number of classes by switching to
 	//a variable-size data structure like std::vector
+//TODO: Add some checking on rune scribes to make sure that a character who rolls rune scribe meets the required prereqs
 
 #include <iostream>
 #include <string>
@@ -371,7 +372,7 @@ static std::string mysticSubclass[] = { "avatar", "awakened", "immortal", "nomad
 static int numPaladinSubs = 8;
 static std::string paladinSubclass[] = { "ancients", "conquest", "crown", "devotion", "redemption", "treachery", "vengeance", "oathbreaker" };
 static int numRangerSubs = 6;
-static std::string rangerSubclass[] = { "beast master", "dark stalker", "horizon walker", "hunter", "monster slayer", "primeval guardian" };
+static std::string rangerSubclass[] = { "beast master", "gloom stalker", "horizon walker", "hunter", "monster slayer", "primeval guardian" };
 static int numRogueSubs = 7;
 static std::string rogueSubclass[] = { "arcane trickster", "assassin", "inquisitive", "mastermind", "scout", "swashbuckler", "thief" };
 static int numSorcererSubs = 8;
@@ -2165,6 +2166,7 @@ static std::string* paladinSubclassAbilities[] = {
 };
 	//most paladin subclasses gain bonus spells which need to be accounted for later
 #pragma endregion paladin abilities
+#pragma region
 static std::string rangerAbilities[] = {
 	"favored enemy, natural explorer",
 	"favored enemy, natural explorer",
@@ -2187,9 +2189,148 @@ static std::string rangerAbilities[] = {
 	"favored enemy, natural explorer, primeval awareness, extra attack, land's stride, hide in plain sight, vanish, feral senses",
 	"favored enemy, natural explorer, primeval awareness, extra attack, land's stride, hide in plain sight, vanish, feral senses, foe slayer"
 };
-/*
-static std::string rangerSubclass[] = { "beast master", "dark stalker", "horizon walker", "hunter", "monster slayer", "primeval guardian" };
-*/
+static std::string beastMasterRangerAbilities[] = {
+	"",
+	"",
+	"ranger's companion",
+	"ranger's companion",
+	"ranger's companion",
+	"ranger's companion",
+	"ranger's companion, exceptional training",
+	"ranger's companion, exceptional training",
+	"ranger's companion, exceptional training",
+	"ranger's companion, exceptional training",
+	"ranger's companion, exceptional training, bestial fury",
+	"ranger's companion, exceptional training, bestial fury",
+	"ranger's companion, exceptional training, bestial fury",
+	"ranger's companion, exceptional training, bestial fury",
+	"ranger's companion, exceptional training, bestial fury, share spells",
+	"ranger's companion, exceptional training, bestial fury, share spells",
+	"ranger's companion, exceptional training, bestial fury, share spells",
+	"ranger's companion, exceptional training, bestial fury, share spells",
+	"ranger's companion, exceptional training, bestial fury, share spells",
+	"ranger's companion, exceptional training, bestial fury, share spells"
+};
+	//beast master gains an animal companion which will have to be accounted for later
+static std::string gloomStalkerRangerAbilities[] = {
+	"",
+	"",
+	"gloom stalker magic, dread ambusher, umbral sight",
+	"gloom stalker magic, dread ambusher, umbral sight",
+	"gloom stalker magic, dread ambusher, umbral sight",
+	"gloom stalker magic, dread ambusher, umbral sight",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind, stalker's flurry",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind, stalker's flurry",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind, stalker's flurry",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind, stalker's flurry",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind, stalker's flurry, shadowy dodge",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind, stalker's flurry, shadowy dodge",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind, stalker's flurry, shadowy dodge",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind, stalker's flurry, shadowy dodge",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind, stalker's flurry, shadowy dodge",
+	"gloom stalker magic, dread ambusher, umbral sight, iron mind, stalker's flurry, shadowy dodge"
+};
+	//gloom stalkers gain bonus magic that needs to be accounted for later
+static std::string horizonWalkerRangerAbilities[] = {
+	"",
+	"",
+	"horizon walker magic, detect portal, planar warrior",
+	"horizon walker magic, detect portal, planar warrior",
+	"horizon walker magic, detect portal, planar warrior",
+	"horizon walker magic, detect portal, planar warrior",
+	"horizon walker magic, detect portal, planar warrior, ethereal step",
+	"horizon walker magic, detect portal, planar warrior, ethereal step",
+	"horizon walker magic, detect portal, planar warrior, ethereal step",
+	"horizon walker magic, detect portal, planar warrior, ethereal step",
+	"horizon walker magic, detect portal, planar warrior, ethereal step, distant strike",
+	"horizon walker magic, detect portal, planar warrior, ethereal step, distant strike",
+	"horizon walker magic, detect portal, planar warrior, ethereal step, distant strike",
+	"horizon walker magic, detect portal, planar warrior, ethereal step, distant strike",
+	"horizon walker magic, detect portal, planar warrior, ethereal step, distant strike, spectral defense",
+	"horizon walker magic, detect portal, planar warrior, ethereal step, distant strike, spectral defense",
+	"horizon walker magic, detect portal, planar warrior, ethereal step, distant strike, spectral defense",
+	"horizon walker magic, detect portal, planar warrior, ethereal step, distant strike, spectral defense",
+	"horizon walker magic, detect portal, planar warrior, ethereal step, distant strike, spectral defense",
+	"horizon walker magic, detect portal, planar warrior, ethereal step, distant strike, spectral defense"
+};
+	//horizon walkers gain bonus magic that needs to be accounted for later
+static std::string hunterRangerAbilities[] = {
+	"",
+	"",
+	"hunter's prey",
+	"hunter's prey",
+	"hunter's prey",
+	"hunter's prey",
+	"hunter's prey, defensive tactics",
+	"hunter's prey, defensive tactics",
+	"hunter's prey, defensive tactics",
+	"hunter's prey, defensive tactics",
+	"hunter's prey, defensive tactics, multiattack",
+	"hunter's prey, defensive tactics, multiattack",
+	"hunter's prey, defensive tactics, multiattack",
+	"hunter's prey, defensive tactics, multiattack",
+	"hunter's prey, defensive tactics, multiattack, superior hunter's defense",
+	"hunter's prey, defensive tactics, multiattack, superior hunter's defense",
+	"hunter's prey, defensive tactics, multiattack, superior hunter's defense",
+	"hunter's prey, defensive tactics, multiattack, superior hunter's defense",
+	"hunter's prey, defensive tactics, multiattack, superior hunter's defense",
+	"hunter's prey, defensive tactics, multiattack, superior hunter's defense"
+};
+	//hunter has a bunch of unique features that need to be accounted for later
+static std::string monsterSlayerRangerAbilities[] = {
+	"",
+	"",
+	"monster slayer magic, hunter's sense, slayer's prey",
+	"monster slayer magic, hunter's sense, slayer's prey",
+	"monster slayer magic, hunter's sense, slayer's prey",
+	"monster slayer magic, hunter's sense, slayer's prey",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense, magic-user's nemesis",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense, magic-user's nemesis",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense, magic-user's nemesis",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense, magic-user's nemesis",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense, magic-user's nemesis, slayer's counter",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense, magic-user's nemesis, slayer's counter",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense, magic-user's nemesis, slayer's counter",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense, magic-user's nemesis, slayer's counter",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense, magic-user's nemesis, slayer's counter",
+	"monster slayer magic, hunter's sense, slayer's prey, supernatural defense, magic-user's nemesis, slayer's counter"
+};
+	//monster slayer gains bonus magic that needs to be accounted for later
+static std::string primevalGuardianRangerAbilities[] = {
+	"",
+	"",
+	"guardian magic, guardian soul, piercing thorns",
+	"guardian magic, guardian soul, piercing thorns",
+	"guardian magic, guardian soul, piercing thorns",
+	"guardian magic, guardian soul, piercing thorns",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude, rooted defense",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude, rooted defense",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude, rooted defense",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude, rooted defense",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude, rooted defense, guardian aura",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude, rooted defense, guardian aura",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude, rooted defense, guardian aura",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude, rooted defense, guardian aura",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude, rooted defense, guardian aura",
+	"guardian magic, guardian soul, piercing thorns, ancient fortitude, rooted defense, guardian aura"
+};
+static std::string* rangerSubclassAbilities[] = {
+	beastMasterRangerAbilities, gloomStalkerRangerAbilities, horizonWalkerRangerAbilities, hunterRangerAbilities, monsterSlayerRangerAbilities, primevalGuardianRangerAbilities
+};
+#pragma endregion ranger abilities
+#pragma region
 static std::string rogueAbilities[] = {
 	"sneak attack (1d6), expertise, thieves' cant",
 	"sneak attack (1d6), expertise, thieves' cant, cunning action",
@@ -2212,9 +2353,169 @@ static std::string rogueAbilities[] = {
 	"sneak attack (10d6), expertise (x2), thieves' cant, cunning action, uncanny dodge, evasion, reliable talent, blindsense, slippery mind, elusive",
 	"sneak attack (10d6), expertise (x2), thieves' cant, cunning action, uncanny dodge, evasion, reliable talent, blindsense, slippery mind, elusive, stroke of luck"
 };
-/*
-static std::string rogueSubclass[] = { "arcane trickster", "assassin", "inquisitive", "mastermind", "scout", "swashbuckler", "thief" };
-*/
+static std::string arcaneTrickerRogueAbilities[] = {
+	"",
+	"",
+	"spellcasting, mage hand legerdemain",
+	"spellcasting, mage hand legerdemain",
+	"spellcasting, mage hand legerdemain",
+	"spellcasting, mage hand legerdemain",
+	"spellcasting, mage hand legerdemain",
+	"spellcasting, mage hand legerdemain",
+	"spellcasting, mage hand legerdemain, magical ambush",
+	"spellcasting, mage hand legerdemain, magical ambush",
+	"spellcasting, mage hand legerdemain, magical ambush",
+	"spellcasting, mage hand legerdemain, magical ambush",
+	"spellcasting, mage hand legerdemain, magical ambush, versatile trickster",
+	"spellcasting, mage hand legerdemain, magical ambush, versatile trickster",
+	"spellcasting, mage hand legerdemain, magical ambush, versatile trickster",
+	"spellcasting, mage hand legerdemain, magical ambush, versatile trickster",
+	"spellcasting, mage hand legerdemain, magical ambush, versatile trickster, spell thief",
+	"spellcasting, mage hand legerdemain, magical ambush, versatile trickster, spell thief",
+	"spellcasting, mage hand legerdemain, magical ambush, versatile trickster, spell thief",
+	"spellcasting, mage hand legerdemain, magical ambush, versatile trickster, spell thief"
+};
+	//arcane trickster gains spellcasting, which needs to be accounted for later
+static std::string assassinRogueAbilities[] = {
+	"",
+	"",
+	"proficiency with disguise kit/poisoner's kit, assassinate",
+	"proficiency with disguise kit/poisoner's kit, assassinate",
+	"proficiency with disguise kit/poisoner's kit, assassinate",
+	"proficiency with disguise kit/poisoner's kit, assassinate",
+	"proficiency with disguise kit/poisoner's kit, assassinate",
+	"proficiency with disguise kit/poisoner's kit, assassinate",
+	"proficiency with disguise kit/poisoner's kit, assassinate, infiltration expertise",
+	"proficiency with disguise kit/poisoner's kit, assassinate, infiltration expertise",
+	"proficiency with disguise kit/poisoner's kit, assassinate, infiltration expertise",
+	"proficiency with disguise kit/poisoner's kit, assassinate, infiltration expertise",
+	"proficiency with disguise kit/poisoner's kit, assassinate, infiltration expertise, imposter",
+	"proficiency with disguise kit/poisoner's kit, assassinate, infiltration expertise, imposter",
+	"proficiency with disguise kit/poisoner's kit, assassinate, infiltration expertise, imposter",
+	"proficiency with disguise kit/poisoner's kit, assassinate, infiltration expertise, imposter",
+	"proficiency with disguise kit/poisoner's kit, assassinate, infiltration expertise, imposter, death strike",
+	"proficiency with disguise kit/poisoner's kit, assassinate, infiltration expertise, imposter, death strike",
+	"proficiency with disguise kit/poisoner's kit, assassinate, infiltration expertise, imposter, death strike",
+	"proficiency with disguise kit/poisoner's kit, assassinate, infiltration expertise, imposter, death strike"
+};
+	//assassin gains bonus proficiencies that need to be accounted for later
+static std::string inquisitiveRogueAbilities[] = {
+	"",
+	"",
+	"ear for deceit, eye for detail, insightful fighting",
+	"ear for deceit, eye for detail, insightful fighting",
+	"ear for deceit, eye for detail, insightful fighting",
+	"ear for deceit, eye for detail, insightful fighting",
+	"ear for deceit, eye for detail, insightful fighting",
+	"ear for deceit, eye for detail, insightful fighting",
+	"ear for deceit, eye for detail, insightful fighting, steady eye",
+	"ear for deceit, eye for detail, insightful fighting, steady eye",
+	"ear for deceit, eye for detail, insightful fighting, steady eye",
+	"ear for deceit, eye for detail, insightful fighting, steady eye",
+	"ear for deceit, eye for detail, insightful fighting, steady eye, unerring eye",
+	"ear for deceit, eye for detail, insightful fighting, steady eye, unerring eye",
+	"ear for deceit, eye for detail, insightful fighting, steady eye, unerring eye",
+	"ear for deceit, eye for detail, insightful fighting, steady eye, unerring eye",
+	"ear for deceit, eye for detail, insightful fighting, steady eye, unerring eye, eye for weakness",
+	"ear for deceit, eye for detail, insightful fighting, steady eye, unerring eye, eye for weakness",
+	"ear for deceit, eye for detail, insightful fighting, steady eye, unerring eye, eye for weakness",
+	"ear for deceit, eye for detail, insightful fighting, steady eye, unerring eye, eye for weakness"
+};
+static std::string mastermindRogueAbilities[] = {
+	"",
+	"",
+	"master of intrigue, master of tactics",
+	"master of intrigue, master of tactics",
+	"master of intrigue, master of tactics",
+	"master of intrigue, master of tactics",
+	"master of intrigue, master of tactics",
+	"master of intrigue, master of tactics",
+	"master of intrigue, master of tactics, insightful manipulator",
+	"master of intrigue, master of tactics, insightful manipulator",
+	"master of intrigue, master of tactics, insightful manipulator",
+	"master of intrigue, master of tactics, insightful manipulator",
+	"master of intrigue, master of tactics, insightful manipulator, misdirection",
+	"master of intrigue, master of tactics, insightful manipulator, misdirection",
+	"master of intrigue, master of tactics, insightful manipulator, misdirection",
+	"master of intrigue, master of tactics, insightful manipulator, misdirection",
+	"master of intrigue, master of tactics, insightful manipulator, misdirection, soul of deceit",
+	"master of intrigue, master of tactics, insightful manipulator, misdirection, soul of deceit",
+	"master of intrigue, master of tactics, insightful manipulator, misdirection, soul of deceit",
+	"master of intrigue, master of tactics, insightful manipulator, misdirection, soul of deceit"
+};
+static std::string scoutRogueAbilities[] = {
+	"",
+	"",
+	"skirmisher, proficiency+expertise in nature/surivival",
+	"skirmisher, proficiency+expertise in nature/surivival",
+	"skirmisher, proficiency+expertise in nature/surivival",
+	"skirmisher, proficiency+expertise in nature/surivival",
+	"skirmisher, proficiency+expertise in nature/surivival",
+	"skirmisher, proficiency+expertise in nature/surivival",
+	"skirmisher, proficiency+expertise in nature/surivival, superior mobility",
+	"skirmisher, proficiency+expertise in nature/surivival, superior mobility",
+	"skirmisher, proficiency+expertise in nature/surivival, superior mobility",
+	"skirmisher, proficiency+expertise in nature/surivival, superior mobility",
+	"skirmisher, proficiency+expertise in nature/surivival, superior mobility, ambush master",
+	"skirmisher, proficiency+expertise in nature/surivival, superior mobility, ambush master",
+	"skirmisher, proficiency+expertise in nature/surivival, superior mobility, ambush master",
+	"skirmisher, proficiency+expertise in nature/surivival, superior mobility, ambush master",
+	"skirmisher, proficiency+expertise in nature/surivival, superior mobility, ambush master, sudden strike",
+	"skirmisher, proficiency+expertise in nature/surivival, superior mobility, ambush master, sudden strike",
+	"skirmisher, proficiency+expertise in nature/surivival, superior mobility, ambush master, sudden strike",
+	"skirmisher, proficiency+expertise in nature/surivival, superior mobility, ambush master, sudden strike"
+};
+	//scouts gain bonus proficiencies that need to be accounted for later
+	//scouts get bonus speed that needs to be accounted for later
+static std::string swashbucklerRogueAbilities[] = {
+	"",
+	"",
+	"fancy footwork, rakish audacity",
+	"fancy footwork, rakish audacity",
+	"fancy footwork, rakish audacity",
+	"fancy footwork, rakish audacity",
+	"fancy footwork, rakish audacity",
+	"fancy footwork, rakish audacity",
+	"fancy footwork, rakish audacity, panache",
+	"fancy footwork, rakish audacity, panache",
+	"fancy footwork, rakish audacity, panache",
+	"fancy footwork, rakish audacity, panache",
+	"fancy footwork, rakish audacity, panache, elegant maneuver",
+	"fancy footwork, rakish audacity, panache, elegant maneuver",
+	"fancy footwork, rakish audacity, panache, elegant maneuver",
+	"fancy footwork, rakish audacity, panache, elegant maneuver",
+	"fancy footwork, rakish audacity, panache, elegant maneuver, master duelist",
+	"fancy footwork, rakish audacity, panache, elegant maneuver, master duelist",
+	"fancy footwork, rakish audacity, panache, elegant maneuver, master duelist",
+	"fancy footwork, rakish audacity, panache, elegant maneuver, master duelist"
+};
+static std::string thiefRogueAbilities[] = {
+	"",
+	"",
+	"fast hands, second story work",
+	"fast hands, second story work",
+	"fast hands, second story work",
+	"fast hands, second story work",
+	"fast hands, second story work",
+	"fast hands, second story work",
+	"fast hands, second story work, supreme sneak",
+	"fast hands, second story work, supreme sneak",
+	"fast hands, second story work, supreme sneak",
+	"fast hands, second story work, supreme sneak",
+	"fast hands, second story work, supreme sneak, use magic device",
+	"fast hands, second story work, supreme sneak, use magic device",
+	"fast hands, second story work, supreme sneak, use magic device",
+	"fast hands, second story work, supreme sneak, use magic device",
+	"fast hands, second story work, supreme sneak, use magic device, thief's reflexes",
+	"fast hands, second story work, supreme sneak, use magic device, thief's reflexes",
+	"fast hands, second story work, supreme sneak, use magic device, thief's reflexes",
+	"fast hands, second story work, supreme sneak, use magic device, thief's reflexes"
+};
+static std::string* rogueSubclassAbilities[] = {
+	arcaneTrickerRogueAbilities, assassinRogueAbilities, inquisitiveRogueAbilities, mastermindRogueAbilities, scoutRogueAbilities, swashbucklerRogueAbilities, thiefRogueAbilities
+};
+#pragma endregion rogue abilities
+#pragma region 
 static std::string sorcererAbilities[] = {
 	"",
 	"font of magic (2 sorcerery points)",
@@ -2237,9 +2538,192 @@ static std::string sorcererAbilities[] = {
 	"font of magic (19 sorcerery points), metamagic (4)",
 	"font of magic (20 sorcerery points), metamagic (4), sorcerous restoration"
 };
-/*
-static std::string sorcererSubclass[] = { "divine soul", "draconic", "phoenix", "sea", "shadow", "stone", "storm", "wild" };
-*/
+static std::string divineSoulSorcererAbilities[] = {
+	"divine magic, favored by the gods",
+	"divine magic, favored by the gods",
+	"divine magic, favored by the gods",
+	"divine magic, favored by the gods",
+	"divine magic, favored by the gods",
+	"divine magic, favored by the gods, empowered healing",
+	"divine magic, favored by the gods, empowered healing",
+	"divine magic, favored by the gods, empowered healing",
+	"divine magic, favored by the gods, empowered healing",
+	"divine magic, favored by the gods, empowered healing",
+	"divine magic, favored by the gods, empowered healing",
+	"divine magic, favored by the gods, empowered healing",
+	"divine magic, favored by the gods, empowered healing",
+	"divine magic, favored by the gods, empowered healing, otherworldly wings",
+	"divine magic, favored by the gods, empowered healing, otherworldly wings",
+	"divine magic, favored by the gods, empowered healing, otherworldly wings",
+	"divine magic, favored by the gods, empowered healing, otherworldly wings",
+	"divine magic, favored by the gods, empowered healing, otherworldly wings, unearthly recovery",
+	"divine magic, favored by the gods, empowered healing, otherworldly wings, unearthly recovery",
+	"divine magic, favored by the gods, empowered healing, otherworldly wings, unearthly recovery"
+};
+	//divine souls gain access to cleric spells which is like a whole big thing that will need to be accounted for later
+	//divine souls also gain a specific spell based on their alignment that needs to be accounted for later
+static std::string draconicSorcererAbilities[] = {
+	"dragon ancestor, unarmored AC equals 13 + Dex mod",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity, dragon wings",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity, dragon wings",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity, dragon wings",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity, dragon wings",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity, dragon wings, draconic presence",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity, dragon wings, draconic presence",
+	"dragon ancestor, unarmored AC equals 13 + Dex mod, elemental affinity, dragon wings, draconic presence"
+};
+	//draconic sorcerers gain abilities based on their dragon color, which will need to be accounted for later
+	//draconic sorcerers gain bonus hp which has already been taken into account
+static std::string phoenixSorcererAbilities[] = {
+	"ignite, mantle of flames",
+	"ignite, mantle of flames",
+	"ignite, mantle of flames",
+	"ignite, mantle of flames",
+	"ignite, mantle of flames",
+	"ignite, mantle of flames, phoenix spark",
+	"ignite, mantle of flames, phoenix spark",
+	"ignite, mantle of flames, phoenix spark",
+	"ignite, mantle of flames, phoenix spark",
+	"ignite, mantle of flames, phoenix spark",
+	"ignite, mantle of flames, phoenix spark",
+	"ignite, mantle of flames, phoenix spark",
+	"ignite, mantle of flames, phoenix spark",
+	"ignite, mantle of flames, phoenix spark, nourishing fire",
+	"ignite, mantle of flames, phoenix spark, nourishing fire",
+	"ignite, mantle of flames, phoenix spark, nourishing fire",
+	"ignite, mantle of flames, phoenix spark, nourishing fire",
+	"ignite, mantle of flames, phoenix spark, nourishing fire, form of the phoenix",
+	"ignite, mantle of flames, phoenix spark, nourishing fire, form of the phoenix",
+	"ignite, mantle of flames, phoenix spark, nourishing fire, form of the phoenix"
+};
+static std::string seaSorcererAbilities[] = {
+	"soul of the sea, curse of the sea",
+	"soul of the sea, curse of the sea",
+	"soul of the sea, curse of the sea",
+	"soul of the sea, curse of the sea",
+	"soul of the sea, curse of the sea",
+	"soul of the sea, curse of the sea, watery defense",
+	"soul of the sea, curse of the sea, watery defense",
+	"soul of the sea, curse of the sea, watery defense",
+	"soul of the sea, curse of the sea, watery defense",
+	"soul of the sea, curse of the sea, watery defense",
+	"soul of the sea, curse of the sea, watery defense",
+	"soul of the sea, curse of the sea, watery defense",
+	"soul of the sea, curse of the sea, watery defense",
+	"soul of the sea, curse of the sea, watery defense, shifting form",
+	"soul of the sea, curse of the sea, watery defense, shifting form",
+	"soul of the sea, curse of the sea, watery defense, shifting form",
+	"soul of the sea, curse of the sea, watery defense, shifting form",
+	"soul of the sea, curse of the sea, watery defense, shifting form, water soul",
+	"soul of the sea, curse of the sea, watery defense, shifting form, water soul",
+	"soul of the sea, curse of the sea, watery defense, shifting form, water soul"
+};
+static std::string shadowSorcererAbilities[] = {
+	"eyes of the dark, strength of the grave",
+	"eyes of the dark, strength of the grave",
+	"eyes of the dark, strength of the grave",
+	"eyes of the dark, strength of the grave",
+	"eyes of the dark, strength of the grave",
+	"eyes of the dark, strength of the grave, hound of ill omen",
+	"eyes of the dark, strength of the grave, hound of ill omen",
+	"eyes of the dark, strength of the grave, hound of ill omen",
+	"eyes of the dark, strength of the grave, hound of ill omen",
+	"eyes of the dark, strength of the grave, hound of ill omen",
+	"eyes of the dark, strength of the grave, hound of ill omen",
+	"eyes of the dark, strength of the grave, hound of ill omen",
+	"eyes of the dark, strength of the grave, hound of ill omen",
+	"eyes of the dark, strength of the grave, hound of ill omen, shadow walk",
+	"eyes of the dark, strength of the grave, hound of ill omen, shadow walk",
+	"eyes of the dark, strength of the grave, hound of ill omen, shadow walk",
+	"eyes of the dark, strength of the grave, hound of ill omen, shadow walk",
+	"eyes of the dark, strength of the grave, hound of ill omen, shadow walk, umbral form",
+	"eyes of the dark, strength of the grave, hound of ill omen, shadow walk, umbral form",
+	"eyes of the dark, strength of the grave, hound of ill omen, shadow walk, umbral form"
+};
+static std::string stoneSorcererAbilities[] = {
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp)",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp)",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp)",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp)",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp)",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis, stone's edge",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis, stone's edge",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis, stone's edge",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis, stone's edge",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis, stone's edge, earth master's aegis",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis, stone's edge, earth master's aegis",
+	"proficiency with shields/simple weapons/martial weapons, metal magic, stone's durability (hp boost already counted into hp), stone aegis, stone's edge, earth master's aegis"
+};
+	//stone sorcerers gain bonus armor and weapon proficiencies that need to be accounted for later
+static std::string stormSorcererAbilities[] = {
+	"wind speaker, tempestuous magic",
+	"wind speaker, tempestuous magic",
+	"wind speaker, tempestuous magic",
+	"wind speaker, tempestuous magic",
+	"wind speaker, tempestuous magic",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide, storm's fury",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide, storm's fury",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide, storm's fury",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide, storm's fury",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide, storm's fury, wind soul",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide, storm's fury, wind soul",
+	"wind speaker, tempestuous magic, heart of the storm, storm guide, storm's fury, wind soul"
+};
+static std::string wildSorcererAbilities[] = {
+	"wild magic surge, tides of chaos",
+	"wild magic surge, tides of chaos",
+	"wild magic surge, tides of chaos",
+	"wild magic surge, tides of chaos",
+	"wild magic surge, tides of chaos",
+	"wild magic surge, tides of chaos, bend luck",
+	"wild magic surge, tides of chaos, bend luck",
+	"wild magic surge, tides of chaos, bend luck",
+	"wild magic surge, tides of chaos, bend luck",
+	"wild magic surge, tides of chaos, bend luck",
+	"wild magic surge, tides of chaos, bend luck",
+	"wild magic surge, tides of chaos, bend luck",
+	"wild magic surge, tides of chaos, bend luck",
+	"wild magic surge, tides of chaos, bend luck, controlled chaos",
+	"wild magic surge, tides of chaos, bend luck, controlled chaos",
+	"wild magic surge, tides of chaos, bend luck, controlled chaos",
+	"wild magic surge, tides of chaos, bend luck, controlled chaos",
+	"wild magic surge, tides of chaos, bend luck, controlled chaos, spell bombardment",
+	"wild magic surge, tides of chaos, bend luck, controlled chaos, spell bombardment",
+	"wild magic surge, tides of chaos, bend luck, controlled chaos, spell bombardment"
+};
+static std::string* sorcererSubclassAbilities[] = {
+	divineSoulSorcererAbilities, draconicSorcererAbilities, phoenixSorcererAbilities, seaSorcererAbilities, shadowSorcererAbilities, stoneSorcererAbilities, stormSorcererAbilities, wildSorcererAbilities
+};
+#pragma endregion sorcerer abilities
+#pragma region
 static std::string warlockAbilities[] = {
 	"",
 	"eldritch invocations (2)",
@@ -2262,9 +2746,213 @@ static std::string warlockAbilities[] = {
 	"eldritch invocations (8), pact boon, mystic arcanum (9th)",
 	"eldritch invocations (8), pact boon, mystic arcanum (9th), eldritch master"
 };
-/*
-static std::string warlockSubclass[] = { "archfey", "celestial", "fiend", "ghost in the machine", "great old one", "hexblade", "raven queen", "seeker", "undying" };
-*/
+static std::string archfeyWarlockAbilities[] = {
+	"expanded spell list, fey presence",
+	"expanded spell list, fey presence",
+	"expanded spell list, fey presence",
+	"expanded spell list, fey presence",
+	"expanded spell list, fey presence",
+	"expanded spell list, fey presence, misty escape",
+	"expanded spell list, fey presence, misty escape",
+	"expanded spell list, fey presence, misty escape",
+	"expanded spell list, fey presence, misty escape",
+	"expanded spell list, fey presence, misty escape, beguiling defenses",
+	"expanded spell list, fey presence, misty escape, beguiling defenses",
+	"expanded spell list, fey presence, misty escape, beguiling defenses",
+	"expanded spell list, fey presence, misty escape, beguiling defenses",
+	"expanded spell list, fey presence, misty escape, beguiling defenses, dark delerium",
+	"expanded spell list, fey presence, misty escape, beguiling defenses, dark delerium",
+	"expanded spell list, fey presence, misty escape, beguiling defenses, dark delerium",
+	"expanded spell list, fey presence, misty escape, beguiling defenses, dark delerium",
+	"expanded spell list, fey presence, misty escape, beguiling defenses, dark delerium",
+	"expanded spell list, fey presence, misty escape, beguiling defenses, dark delerium",
+	"expanded spell list, fey presence, misty escape, beguiling defenses, dark delerium"
+};
+static std::string celestialWarlockAbilities[] =	{
+	"expanded spell list, gain light/sacred flame cantrips, healing light",
+	"expanded spell list, gain light/sacred flame cantrips, healing light",
+	"expanded spell list, gain light/sacred flame cantrips, healing light",
+	"expanded spell list, gain light/sacred flame cantrips, healing light",
+	"expanded spell list, gain light/sacred flame cantrips, healing light",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul, celestial resilience",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul, celestial resilience",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul, celestial resilience",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul, celestial resilience",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul, celestial resilience, searing vengeance",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul, celestial resilience, searing vengeance",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul, celestial resilience, searing vengeance",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul, celestial resilience, searing vengeance",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul, celestial resilience, searing vengeance",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul, celestial resilience, searing vengeance",
+	"expanded spell list, gain light/sacred flame cantrips, healing light, radiant soul, celestial resilience, searing vengeance"
+};
+	//celestial warlocks gain bonus cantrips that will need to be accounted for later
+static std::string fiendWarlockAbilities[] = {
+	"expanded spell list, dark one's blessing",
+	"expanded spell list, dark one's blessing",
+	"expanded spell list, dark one's blessing",
+	"expanded spell list, dark one's blessing",
+	"expanded spell list, dark one's blessing",
+	"expanded spell list, dark one's blessing, dark one's own luck",
+	"expanded spell list, dark one's blessing, dark one's own luck",
+	"expanded spell list, dark one's blessing, dark one's own luck",
+	"expanded spell list, dark one's blessing, dark one's own luck",
+	"expanded spell list, dark one's blessing, dark one's own luck, fiendish resilience",
+	"expanded spell list, dark one's blessing, dark one's own luck, fiendish resilience",
+	"expanded spell list, dark one's blessing, dark one's own luck, fiendish resilience",
+	"expanded spell list, dark one's blessing, dark one's own luck, fiendish resilience",
+	"expanded spell list, dark one's blessing, dark one's own luck, fiendish resilience, hurl through hell",
+	"expanded spell list, dark one's blessing, dark one's own luck, fiendish resilience, hurl through hell",
+	"expanded spell list, dark one's blessing, dark one's own luck, fiendish resilience, hurl through hell",
+	"expanded spell list, dark one's blessing, dark one's own luck, fiendish resilience, hurl through hell",
+	"expanded spell list, dark one's blessing, dark one's own luck, fiendish resilience, hurl through hell",
+	"expanded spell list, dark one's blessing, dark one's own luck, fiendish resilience, hurl through hell",
+	"expanded spell list, dark one's blessing, dark one's own luck, fiendish resilience, hurl through hell"
+};
+static std::string ghostInTheMachineWarlockAbilities[] = {
+	"expanded spell list, proficiency with hacking tools, information surge",
+	"expanded spell list, proficiency with hacking tools, information surge",
+	"expanded spell list, proficiency with hacking tools, information surge",
+	"expanded spell list, proficiency with hacking tools, information surge",
+	"expanded spell list, proficiency with hacking tools, information surge",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk, personal encryption",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk, personal encryption",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk, personal encryption",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk, personal encryption",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk, personal encryption, technovirus",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk, personal encryption, technovirus",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk, personal encryption, technovirus",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk, personal encryption, technovirus",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk, personal encryption, technovirus",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk, personal encryption, technovirus",
+	"expanded spell list, proficiency with hacking tools, information surge, wire walk, personal encryption, technovirus"
+};
+	//ghost in the machine warlocks gain bonus proficiencies that will need to be accounted for later
+static std::string greatOldOneWarlockAbilities[] = {
+	"expanded spell list, awakened mind",
+	"expanded spell list, awakened mind",
+	"expanded spell list, awakened mind",
+	"expanded spell list, awakened mind",
+	"expanded spell list, awakened mind",
+	"expanded spell list, awakened mind, entropic ward",
+	"expanded spell list, awakened mind, entropic ward",
+	"expanded spell list, awakened mind, entropic ward",
+	"expanded spell list, awakened mind, entropic ward",
+	"expanded spell list, awakened mind, entropic ward, thought shield",
+	"expanded spell list, awakened mind, entropic ward, thought shield",
+	"expanded spell list, awakened mind, entropic ward, thought shield",
+	"expanded spell list, awakened mind, entropic ward, thought shield",
+	"expanded spell list, awakened mind, entropic ward, thought shield, create thrall",
+	"expanded spell list, awakened mind, entropic ward, thought shield, create thrall",
+	"expanded spell list, awakened mind, entropic ward, thought shield, create thrall",
+	"expanded spell list, awakened mind, entropic ward, thought shield, create thrall",
+	"expanded spell list, awakened mind, entropic ward, thought shield, create thrall",
+	"expanded spell list, awakened mind, entropic ward, thought shield, create thrall",
+	"expanded spell list, awakened mind, entropic ward, thought shield, create thrall"
+};
+static std::string hexbladeWarlockAbilities[] = {
+	"expanded spell list, hexblade's curse, hex warrior",
+	"expanded spell list, hexblade's curse, hex warrior",
+	"expanded spell list, hexblade's curse, hex warrior",
+	"expanded spell list, hexblade's curse, hex warrior",
+	"expanded spell list, hexblade's curse, hex warrior",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter, armor of hexes",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter, armor of hexes",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter, armor of hexes",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter, armor of hexes",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter, armor of hexes, master of hexes",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter, armor of hexes, master of hexes",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter, armor of hexes, master of hexes",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter, armor of hexes, master of hexes",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter, armor of hexes, master of hexes",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter, armor of hexes, master of hexes",
+	"expanded spell list, hexblade's curse, hex warrior, accursed specter, armor of hexes, master of hexes"
+};
+	//hexblade gains bonus proficiencies that will need to be accounted for later (in the hex warrior ability)
+static std::string ravenQueenWarlockAbilities[] = {
+	"expanded spell list, sentinel raven",
+	"expanded spell list, sentinel raven",
+	"expanded spell list, sentinel raven",
+	"expanded spell list, sentinel raven",
+	"expanded spell list, sentinel raven",
+	"expanded spell list, sentinel raven, soul of the raven",
+	"expanded spell list, sentinel raven, soul of the raven",
+	"expanded spell list, sentinel raven, soul of the raven",
+	"expanded spell list, sentinel raven, soul of the raven",
+	"expanded spell list, sentinel raven, soul of the raven, raven's shield",
+	"expanded spell list, sentinel raven, soul of the raven, raven's shield",
+	"expanded spell list, sentinel raven, soul of the raven, raven's shield",
+	"expanded spell list, sentinel raven, soul of the raven, raven's shield",
+	"expanded spell list, sentinel raven, soul of the raven, raven's shield, queen's right hand",
+	"expanded spell list, sentinel raven, soul of the raven, raven's shield, queen's right hand",
+	"expanded spell list, sentinel raven, soul of the raven, raven's shield, queen's right hand",
+	"expanded spell list, sentinel raven, soul of the raven, raven's shield, queen's right hand",
+	"expanded spell list, sentinel raven, soul of the raven, raven's shield, queen's right hand",
+	"expanded spell list, sentinel raven, soul of the raven, raven's shield, queen's right hand",
+	"expanded spell list, sentinel raven, soul of the raven, raven's shield, queen's right hand"
+};
+static std::string seekerWarlockAbilities[] = {
+	"expanded spell list, shielding aurora",
+	"expanded spell list, shielding aurora",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge, far wanderer",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge, far wanderer",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge, far wanderer",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge, far wanderer",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge, far wanderer, astral sequestration",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge, far wanderer, astral sequestration",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge, far wanderer, astral sequestration",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge, far wanderer, astral sequestration",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge, far wanderer, astral sequestration",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge, far wanderer, astral sequestration",
+	"expanded spell list, shielding aurora, pact boon option: pact of the star chain, astral refuge, far wanderer, astral sequestration"
+};
+static std::string undyingWarlockAbilities[] = {
+	"expanded spell list, among the dead",
+	"expanded spell list, among the dead",
+	"expanded spell list, among the dead",
+	"expanded spell list, among the dead",
+	"expanded spell list, among the dead",
+	"expanded spell list, among the dead, defy death",
+	"expanded spell list, among the dead, defy death",
+	"expanded spell list, among the dead, defy death",
+	"expanded spell list, among the dead, defy death",
+	"expanded spell list, among the dead, defy death, undying nature",
+	"expanded spell list, among the dead, defy death, undying nature",
+	"expanded spell list, among the dead, defy death, undying nature",
+	"expanded spell list, among the dead, defy death, undying nature",
+	"expanded spell list, among the dead, defy death, undying nature, indestructible life",
+	"expanded spell list, among the dead, defy death, undying nature, indestructible life",
+	"expanded spell list, among the dead, defy death, undying nature, indestructible life",
+	"expanded spell list, among the dead, defy death, undying nature, indestructible life",
+	"expanded spell list, among the dead, defy death, undying nature, indestructible life",
+	"expanded spell list, among the dead, defy death, undying nature, indestructible life",
+	"expanded spell list, among the dead, defy death, undying nature, indestructible life"
+};
+static std::string* warlockSubclassAbilities[] = {
+	archfeyWarlockAbilities, celestialWarlockAbilities, fiendWarlockAbilities, ghostInTheMachineWarlockAbilities, greatOldOneWarlockAbilities, hexbladeWarlockAbilities, ravenQueenWarlockAbilities, seekerWarlockAbilities, undyingWarlockAbilities
+};
+	//most warlock subclasses gain extra spells which will need to be accounted for later
+#pragma endregion warlock abilities
+#pragma region
 static std::string wizardAbilities[] = {
 	"arcane recovery",
 	"arcane recovery",
@@ -2287,9 +2975,346 @@ static std::string wizardAbilities[] = {
 	"arcane recovery, spell mastery",
 	"arcane recovery, spell mastery, signature spell"
 };
-/*
-static std::string wizardSubclass[] = { "artificer", "bladesinger", "lore master", "abjuration", "conjuration", "divination", "enchantment", "evocation", "illusion", "invention", "necromancy", "transmutation", "technomancy", "theurgy", "war magic" };
-*/
+static std::string artificerWizardAbilities[] = {
+	"",
+	"infuse potions, infuse scrolls",
+	"infuse potions, infuse scrolls",
+	"infuse potions, infuse scrolls",
+	"infuse potions, infuse scrolls",
+	"infuse potions, infuse scrolls, infuse weapons and armor",
+	"infuse potions, infuse scrolls, infuse weapons and armor",
+	"infuse potions, infuse scrolls, infuse weapons and armor",
+	"infuse potions, infuse scrolls, infuse weapons and armor",
+	"infuse potions, infuse scrolls, infuse weapons and armor, superior artificer",
+	"infuse potions, infuse scrolls, infuse weapons and armor, superior artificer",
+	"infuse potions, infuse scrolls, infuse weapons and armor, superior artificer",
+	"infuse potions, infuse scrolls, infuse weapons and armor, superior artificer",
+	"infuse potions, infuse scrolls, infuse weapons and armor, superior artificer, master artificer",
+	"infuse potions, infuse scrolls, infuse weapons and armor, superior artificer, master artificer",
+	"infuse potions, infuse scrolls, infuse weapons and armor, superior artificer, master artificer",
+	"infuse potions, infuse scrolls, infuse weapons and armor, superior artificer, master artificer",
+	"infuse potions, infuse scrolls, infuse weapons and armor, superior artificer, master artificer",
+	"infuse potions, infuse scrolls, infuse weapons and armor, superior artificer, master artificer",
+	"infuse potions, infuse scrolls, infuse weapons and armor, superior artificer, master artificer"
+};
+static std::string bladesingerWizardAbilities[] = {
+	"",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack, song of defense",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack, song of defense",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack, song of defense",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack, song of defense",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack, song of defense, song of victory",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack, song of defense, song of victory",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack, song of defense, song of victory",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack, song of defense, song of victory",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack, song of defense, song of victory",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack, song of defense, song of victory",
+	"proficiency with light armor/one one-handed melee weapon/performance, bladesong, extra attack, song of defense, song of victory"
+};
+	//bladesinger gains bonus proficiencies that will need to be accounted for later
+static std::string loreMasterWizardAbilities[] = {
+	"",
+	"lore master, spell secrets",
+	"lore master, spell secrets",
+	"lore master, spell secrets",
+	"lore master, spell secrets",
+	"lore master, spell secrets, alchemical casting",
+	"lore master, spell secrets, alchemical casting",
+	"lore master, spell secrets, alchemical casting",
+	"lore master, spell secrets, alchemical casting",
+	"lore master, spell secrets, alchemical casting, prodigious memory",
+	"lore master, spell secrets, alchemical casting, prodigious memory",
+	"lore master, spell secrets, alchemical casting, prodigious memory",
+	"lore master, spell secrets, alchemical casting, prodigious memory",
+	"lore master, spell secrets, alchemical casting, prodigious memory, master of magic",
+	"lore master, spell secrets, alchemical casting, prodigious memory, master of magic",
+	"lore master, spell secrets, alchemical casting, prodigious memory, master of magic",
+	"lore master, spell secrets, alchemical casting, prodigious memory, master of magic",
+	"lore master, spell secrets, alchemical casting, prodigious memory, master of magic",
+	"lore master, spell secrets, alchemical casting, prodigious memory, master of magic",
+	"lore master, spell secrets, alchemical casting, prodigious memory, master of magic"
+};
+	//lore masters gain expertise (from lore master ability), which will need to be accounted for later
+static std::string abjurationWizardAbilities[] = {
+	"",
+	"abjuration savant, arcane ward",
+	"abjuration savant, arcane ward",
+	"abjuration savant, arcane ward",
+	"abjuration savant, arcane ward",
+	"abjuration savant, arcane ward, projected ward",
+	"abjuration savant, arcane ward, projected ward",
+	"abjuration savant, arcane ward, projected ward",
+	"abjuration savant, arcane ward, projected ward",
+	"abjuration savant, arcane ward, projected ward, improved abjuration",
+	"abjuration savant, arcane ward, projected ward, improved abjuration",
+	"abjuration savant, arcane ward, projected ward, improved abjuration",
+	"abjuration savant, arcane ward, projected ward, improved abjuration",
+	"abjuration savant, arcane ward, projected ward, improved abjuration, spell resistance",
+	"abjuration savant, arcane ward, projected ward, improved abjuration, spell resistance",
+	"abjuration savant, arcane ward, projected ward, improved abjuration, spell resistance",
+	"abjuration savant, arcane ward, projected ward, improved abjuration, spell resistance",
+	"abjuration savant, arcane ward, projected ward, improved abjuration, spell resistance",
+	"abjuration savant, arcane ward, projected ward, improved abjuration, spell resistance",
+	"abjuration savant, arcane ward, projected ward, improved abjuration, spell resistance"
+};
+static std::string conjurationWizardAbilities[] = {
+	"",
+	"conjuration savant, minor conjuration",
+	"conjuration savant, minor conjuration",
+	"conjuration savant, minor conjuration",
+	"conjuration savant, minor conjuration",
+	"conjuration savant, minor conjuration, benign transposition",
+	"conjuration savant, minor conjuration, benign transposition",
+	"conjuration savant, minor conjuration, benign transposition",
+	"conjuration savant, minor conjuration, benign transposition",
+	"conjuration savant, minor conjuration, benign transposition, focused conjuration",
+	"conjuration savant, minor conjuration, benign transposition, focused conjuration",
+	"conjuration savant, minor conjuration, benign transposition, focused conjuration",
+	"conjuration savant, minor conjuration, benign transposition, focused conjuration",
+	"conjuration savant, minor conjuration, benign transposition, focused conjuration, durable summons",
+	"conjuration savant, minor conjuration, benign transposition, focused conjuration, durable summons",
+	"conjuration savant, minor conjuration, benign transposition, focused conjuration, durable summons",
+	"conjuration savant, minor conjuration, benign transposition, focused conjuration, durable summons",
+	"conjuration savant, minor conjuration, benign transposition, focused conjuration, durable summons",
+	"conjuration savant, minor conjuration, benign transposition, focused conjuration, durable summons",
+	"conjuration savant, minor conjuration, benign transposition, focused conjuration, durable summons"
+};
+static std::string divinationWizardAbilities[] = {
+	"",
+	"divination savant, portent",
+	"divination savant, portent",
+	"divination savant, portent",
+	"divination savant, portent",
+	"divination savant, portent, expert divination",
+	"divination savant, portent, expert divination",
+	"divination savant, portent, expert divination",
+	"divination savant, portent, expert divination",
+	"divination savant, portent, expert divination, the third eye",
+	"divination savant, portent, expert divination, the third eye",
+	"divination savant, portent, expert divination, the third eye",
+	"divination savant, portent, expert divination, the third eye",
+	"divination savant, portent, expert divination, the third eye, greater portent",
+	"divination savant, portent, expert divination, the third eye, greater portent",
+	"divination savant, portent, expert divination, the third eye, greater portent",
+	"divination savant, portent, expert divination, the third eye, greater portent",
+	"divination savant, portent, expert divination, the third eye, greater portent",
+	"divination savant, portent, expert divination, the third eye, greater portent",
+	"divination savant, portent, expert divination, the third eye, greater portent"
+};
+static std::string enchantmentWizardAbilities[] = {
+	"",
+	"enchantment savant, hypnotic gaze",
+	"enchantment savant, hypnotic gaze",
+	"enchantment savant, hypnotic gaze",
+	"enchantment savant, hypnotic gaze",
+	"enchantment savant, hypnotic gaze, instinctive charm",
+	"enchantment savant, hypnotic gaze, instinctive charm",
+	"enchantment savant, hypnotic gaze, instinctive charm",
+	"enchantment savant, hypnotic gaze, instinctive charm",
+	"enchantment savant, hypnotic gaze, instinctive charm, split enchantment",
+	"enchantment savant, hypnotic gaze, instinctive charm, split enchantment",
+	"enchantment savant, hypnotic gaze, instinctive charm, split enchantment",
+	"enchantment savant, hypnotic gaze, instinctive charm, split enchantment",
+	"enchantment savant, hypnotic gaze, instinctive charm, split enchantment, alter memories",
+	"enchantment savant, hypnotic gaze, instinctive charm, split enchantment, alter memories",
+	"enchantment savant, hypnotic gaze, instinctive charm, split enchantment, alter memories",
+	"enchantment savant, hypnotic gaze, instinctive charm, split enchantment, alter memories",
+	"enchantment savant, hypnotic gaze, instinctive charm, split enchantment, alter memories",
+	"enchantment savant, hypnotic gaze, instinctive charm, split enchantment, alter memories",
+	"enchantment savant, hypnotic gaze, instinctive charm, split enchantment, alter memories"
+};
+static std::string evocationWizardAbilities[] = {
+	"",
+	"evocation savant, sculpt spells",
+	"evocation savant, sculpt spells",
+	"evocation savant, sculpt spells",
+	"evocation savant, sculpt spells",
+	"evocation savant, sculpt spells, potent cantrip",
+	"evocation savant, sculpt spells, potent cantrip",
+	"evocation savant, sculpt spells, potent cantrip",
+	"evocation savant, sculpt spells, potent cantrip",
+	"evocation savant, sculpt spells, potent cantrip, empowered evocation",
+	"evocation savant, sculpt spells, potent cantrip, empowered evocation",
+	"evocation savant, sculpt spells, potent cantrip, empowered evocation",
+	"evocation savant, sculpt spells, potent cantrip, empowered evocation",
+	"evocation savant, sculpt spells, potent cantrip, empowered evocation, overchannel",
+	"evocation savant, sculpt spells, potent cantrip, empowered evocation, overchannel",
+	"evocation savant, sculpt spells, potent cantrip, empowered evocation, overchannel",
+	"evocation savant, sculpt spells, potent cantrip, empowered evocation, overchannel",
+	"evocation savant, sculpt spells, potent cantrip, empowered evocation, overchannel",
+	"evocation savant, sculpt spells, potent cantrip, empowered evocation, overchannel",
+	"evocation savant, sculpt spells, potent cantrip, empowered evocation, overchannel"
+};
+static std::string illusionWizardAbilities[] = {
+	"",
+	"illusion savant, improved minor illusion",
+	"illusion savant, improved minor illusion",
+	"illusion savant, improved minor illusion",
+	"illusion savant, improved minor illusion",
+	"illusion savant, improved minor illusion, malleable illusions",
+	"illusion savant, improved minor illusion, malleable illusions",
+	"illusion savant, improved minor illusion, malleable illusions",
+	"illusion savant, improved minor illusion, malleable illusions",
+	"illusion savant, improved minor illusion, malleable illusions,	illusory self",
+	"illusion savant, improved minor illusion, malleable illusions,	illusory self",
+	"illusion savant, improved minor illusion, malleable illusions,	illusory self",
+	"illusion savant, improved minor illusion, malleable illusions,	illusory self",
+	"illusion savant, improved minor illusion, malleable illusions,	illusory self, illusory reality",
+	"illusion savant, improved minor illusion, malleable illusions,	illusory self, illusory reality",
+	"illusion savant, improved minor illusion, malleable illusions,	illusory self, illusory reality",
+	"illusion savant, improved minor illusion, malleable illusions,	illusory self, illusory reality",
+	"illusion savant, improved minor illusion, malleable illusions,	illusory self, illusory reality",
+	"illusion savant, improved minor illusion, malleable illusions,	illusory self, illusory reality",
+	"illusion savant, improved minor illusion, malleable illusions,	illusory self, illusory reality"
+};
+static std::string inventionWizardAbilities[] = {
+	"",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting, prodigious inspiration",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting, prodigious inspiration",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting, prodigious inspiration",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting, prodigious inspiration",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting, prodigious inspiration, controlled chaos",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting, prodigious inspiration, controlled chaos",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting, prodigious inspiration, controlled chaos",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting, prodigious inspiration, controlled chaos",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting, prodigious inspiration, controlled chaos",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting, prodigious inspiration, controlled chaos",
+	"proficiency with 2 tools, arcanomechanical armor, reckless casting, alchemical casting, prodigious inspiration, controlled chaos"
+};
+	//invention wizards gain bonus tools that need to be accounted for later
+static std::string necromancyWizardAbilities[] = {
+	"",
+	"necromancy savant, grim harvest",
+	"necromancy savant, grim harvest",
+	"necromancy savant, grim harvest",
+	"necromancy savant, grim harvest",
+	"necromancy savant, grim harvest, undead thralls",
+	"necromancy savant, grim harvest, undead thralls",
+	"necromancy savant, grim harvest, undead thralls",
+	"necromancy savant, grim harvest, undead thralls",
+	"necromancy savant, grim harvest, undead thralls, inured to undeath",
+	"necromancy savant, grim harvest, undead thralls, inured to undeath",
+	"necromancy savant, grim harvest, undead thralls, inured to undeath",
+	"necromancy savant, grim harvest, undead thralls, inured to undeath",
+	"necromancy savant, grim harvest, undead thralls, inured to undeath, command undead",
+	"necromancy savant, grim harvest, undead thralls, inured to undeath, command undead",
+	"necromancy savant, grim harvest, undead thralls, inured to undeath, command undead",
+	"necromancy savant, grim harvest, undead thralls, inured to undeath, command undead",
+	"necromancy savant, grim harvest, undead thralls, inured to undeath, command undead",
+	"necromancy savant, grim harvest, undead thralls, inured to undeath, command undead",
+	"necromancy savant, grim harvest, undead thralls, inured to undeath, command undead"
+};
+static std::string transmutationWizardAbilities[] = {
+	"",
+	"transmutation savant, minor alchemy",
+	"transmutation savant, minor alchemy",
+	"transmutation savant, minor alchemy",
+	"transmutation savant, minor alchemy",
+	"transmutation savant, minor alchemy, transmuter's stone",
+	"transmutation savant, minor alchemy, transmuter's stone",
+	"transmutation savant, minor alchemy, transmuter's stone",
+	"transmutation savant, minor alchemy, transmuter's stone",
+	"transmutation savant, minor alchemy, transmuter's stone, shapechanger",
+	"transmutation savant, minor alchemy, transmuter's stone, shapechanger",
+	"transmutation savant, minor alchemy, transmuter's stone, shapechanger",
+	"transmutation savant, minor alchemy, transmuter's stone, shapechanger",
+	"transmutation savant, minor alchemy, transmuter's stone, shapechanger, master transmuter",
+	"transmutation savant, minor alchemy, transmuter's stone, shapechanger, master transmuter",
+	"transmutation savant, minor alchemy, transmuter's stone, shapechanger, master transmuter",
+	"transmutation savant, minor alchemy, transmuter's stone, shapechanger, master transmuter",
+	"transmutation savant, minor alchemy, transmuter's stone, shapechanger, master transmuter",
+	"transmutation savant, minor alchemy, transmuter's stone, shapechanger, master transmuter",
+	"transmutation savant, minor alchemy, transmuter's stone, shapechanger, master transmuter"
+};
+static std::string technomancyWizardAbilities[] = {
+	"",
+	"proficiency with sidearms/hacking tools, technological savant",
+	"proficiency with sidearms/hacking tools, technological savant",
+	"proficiency with sidearms/hacking tools, technological savant",
+	"proficiency with sidearms/hacking tools, technological savant",
+	"proficiency with sidearms/hacking tools, technological savant, program spell",
+	"proficiency with sidearms/hacking tools, technological savant, program spell",
+	"proficiency with sidearms/hacking tools, technological savant, program spell",
+	"proficiency with sidearms/hacking tools, technological savant, program spell",
+	"proficiency with sidearms/hacking tools, technological savant, program spell, online casting",
+	"proficiency with sidearms/hacking tools, technological savant, program spell, online casting",
+	"proficiency with sidearms/hacking tools, technological savant, program spell, online casting",
+	"proficiency with sidearms/hacking tools, technological savant, program spell, online casting",
+	"proficiency with sidearms/hacking tools, technological savant, program spell, online casting, chained device",
+	"proficiency with sidearms/hacking tools, technological savant, program spell, online casting, chained device",
+	"proficiency with sidearms/hacking tools, technological savant, program spell, online casting, chained device",
+	"proficiency with sidearms/hacking tools, technological savant, program spell, online casting, chained device",
+	"proficiency with sidearms/hacking tools, technological savant, program spell, online casting, chained device",
+	"proficiency with sidearms/hacking tools, technological savant, program spell, online casting, chained device",
+	"proficiency with sidearms/hacking tools, technological savant, program spell, online casting, chained device"
+};
+	//technomancy wizards gain bonus proficiencies that need to be accounted for later
+static std::string theurgyWizardAbilities[] = {
+	"",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte, arcane priest",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte, arcane priest",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte, arcane priest",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte, arcane priest",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte, arcane priest, arcane high priest",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte, arcane priest, arcane high priest",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte, arcane priest, arcane high priest",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte, arcane priest, arcane high priest",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte, arcane priest, arcane high priest",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte, arcane priest, arcane high priest",
+	"divine inspiration, arcane initiate, channel arcana, channel arcana: divine arcana, arcane acolyte, arcane priest, arcane high priest"
+};
+static std::string warMagicWizardAbilities[] = {
+	"",
+	"arcane deflection, tactical wit",
+	"arcane deflection, tactical wit",
+	"arcane deflection, tactical wit",
+	"arcane deflection, tactical wit",
+	"arcane deflection, tactical wit, power surge",
+	"arcane deflection, tactical wit, power surge",
+	"arcane deflection, tactical wit, power surge",
+	"arcane deflection, tactical wit, power surge",
+	"arcane deflection, tactical wit, power surge, durable magic",
+	"arcane deflection, tactical wit, power surge, durable magic",
+	"arcane deflection, tactical wit, power surge, durable magic",
+	"arcane deflection, tactical wit, power surge, durable magic",
+	"arcane deflection, tactical wit, power surge, durable magic, deflecting shroud",
+	"arcane deflection, tactical wit, power surge, durable magic, deflecting shroud",
+	"arcane deflection, tactical wit, power surge, durable magic, deflecting shroud",
+	"arcane deflection, tactical wit, power surge, durable magic, deflecting shroud",
+	"arcane deflection, tactical wit, power surge, durable magic, deflecting shroud",
+	"arcane deflection, tactical wit, power surge, durable magic, deflecting shroud",
+	"arcane deflection, tactical wit, power surge, durable magic, deflecting shroud"
+};
+	//war magic wizards gain a bonus to initiative that will need to be accounted for later (from their tactical wit ability)
+static std::string* wizardSubclassAbilities[] = {
+	artificerWizardAbilities, bladesingerWizardAbilities, loreMasterWizardAbilities, abjurationWizardAbilities, conjurationWizardAbilities, divinationWizardAbilities, enchantmentWizardAbilities, evocationWizardAbilities, illusionWizardAbilities, inventionWizardAbilities, necromancyWizardAbilities, transmutationWizardAbilities, technomancyWizardAbilities, theurgyWizardAbilities, warMagicWizardAbilities
+};
+#pragma endregion wizard abilities
+#pragma region
 static std::string runeScribeAbilities[] = {
 	"rune lore, runic magic",
 	"rune lore, runic magic, runic discovery",
@@ -2302,10 +3327,22 @@ static std::string emptyAbilities[] = {
 	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""
 };
 //no subclasses to empty abilities (multiclass I guess)
+static std::string subEmptyAbils[] = {
+	""
+};
+static std::string* emptySubclassAbilities[] = {
+	subEmptyAbils
+};
+#pragma endregion prestige & multiclass abilities
 static std::string* classAbilities[] = {
 	artificerAbilities, barbarianAbilities, bardAbilities, clericAbilities, druidAbilities, fighterAbilities, monkAbilities,
 	mysticAbilities, paladinAbilities, rangerAbilities, rogueAbilities, sorcererAbilities, warlockAbilities,
 	wizardAbilities, runeScribeAbilities, emptyAbilities
+};
+static std::string** subclassAbilities[] = {
+	artificerSubclassAbilities, barbarianSubclassAbilities, bardSubclassAbilities, clericSubclassAbilities, druidSubclassAbilities, fighterSubclassAbilities, monkSubclassAbilities,
+	mysticSubclassAbilities, paladinSubclassAbilities, rangerSubclassAbilities, rogueSubclassAbilities, sorcererSubclassAbilities, warlockSubclassAbilities,
+	wizardSubclassAbilities, emptySubclassAbilities, emptySubclassAbilities
 };
 #pragma endregion class abilities
 /* 
@@ -2601,6 +3638,12 @@ int main()
 		else if (classes[secondaryClass].compare("mystic") == STR_COMPARE_TRUE && subclasses[secondaryClass][secondarySubclass].compare("immortal") == STR_COMPARE_TRUE) {
 			hitPoints += levelSecondaryClass;
 		}
+		if (classes[class_].compare("sorcerer") == STR_COMPARE_TRUE && (subclasses[class_][subclass].compare("draconic") == STR_COMPARE_TRUE || subclasses[class_][subclass].compare("stone") == STR_COMPARE_TRUE)) {
+			hitPoints += levelMainClass;
+		}
+		else if (classes[secondaryClass].compare("sorcerer") == STR_COMPARE_TRUE && (subclasses[secondaryClass][secondarySubclass].compare("draconic") == STR_COMPARE_TRUE || subclasses[class_][subclass].compare("stone") == STR_COMPARE_TRUE)) {
+			hitPoints += levelSecondaryClass;
+		}
 
 		//print the results to std::out
 			//level
@@ -2684,12 +3727,20 @@ int main()
 		std::cout << subraceAbilities[race][subrace] << std::endl;
 
 			//class abilities
-		std::cout << std::endl << "Class abilities: " << classAbilities[class_][levelMainClass - 1] << std::endl;
+		std::cout << std::endl << "Class abilities: " << classAbilities[class_][levelMainClass - 1];
+		if (classAbilities[class_][levelMainClass - 1].compare("") != STR_COMPARE_TRUE && subclassAbilities[class_][subclass][levelMainClass - 1].compare("") != STR_COMPARE_TRUE) {
+			std::cout << ", ";
+		}
+		std::cout << subclassAbilities[class_][subclass][levelMainClass - 1];
 		if (secondaryClass != -1) {
 			std::cout << std::endl << "Second class abilities: " << classAbilities[secondaryClass][levelSecondaryClass - 1] << std::endl;
+			if (classAbilities[secondaryClass][levelSecondaryClass - 1].compare("") != STR_COMPARE_TRUE && subclassAbilities[secondaryClass][secondarySubclass][levelSecondaryClass - 1].compare("") != STR_COMPARE_TRUE) {
+				std::cout << ", ";
+			}
+			std::cout << subclassAbilities[secondaryClass][secondarySubclass][levelSecondaryClass - 1];
 		}
 
-		std::getchar();
+		std::getchar(); 
 		std::cout << std::endl << "-----------------------------------------" << std::endl << std::endl;
 	} while (true);
 }
