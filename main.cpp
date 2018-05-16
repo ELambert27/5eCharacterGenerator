@@ -1,6 +1,10 @@
 //5eCharacterGenerator
 //Makes a random D&D 5e character, either at the given level or at a random level if no level is given
 
+//TODO: BUGFIX: Rune scribe class abilities get printed off with part of another class's abilities present, due to 
+	//nature of rune scribe having zero subclasses. Need to write into the printing a check to ensure we don't print when
+	//subclass == -1 
+
 //TODO: can cut down on the amount of memory used by class abilities & subclass abilities by adjusting the system of
 	//choosing abilities to just list abilities gained at certain levels and the levels those abilities are gained
 	//Didn't do this before because not all classes & subclasses gain abilities at the same levels, but we can make
@@ -19,11 +23,11 @@
 
 //races and subraces
 #pragma region
-static int numberOfRaces = 31;
+static int numberOfRaces = 32;
 static std::string races[] = {
 	"revenant", "aarakocra", "aasimar", "bugbear", "changeling", "dragonborn", "dwarf", "elf", "firbolg", "genasi", "gnome",
 	"goblin", "goliath", "half-elf", "halfling", "half-orc", "hobgoblin", "human", "kenku", "kobold", "lizardfolk", "minotaur",
-	"orc", "shifter", "tabaxi", "tiefling", "tortle", "triton", "warforged", "yuan-ti pureblood", "gith"
+	"orc", "shifter", "tabaxi", "tiefling", "tortle", "triton", "warforged", "yuan-ti pureblood", "gith", "centaur"
 };
 static int numEmptySubs = 0;
 static std::string emptySubrace[] = { "" };
@@ -216,10 +220,10 @@ static int* lizardfolkSubraceStats[] = { subLizardfolkStats };
 static std::string lizardfolkAbilities = "30 foot swim speed, hold breath 15 mins, bite, hungry jaws, natural armor, cunning artisan, proficiency in 2 of animal handling/nature/perception/stealth/survival";
 	//lizaradfolk have no subraces, therefore no subrace abilities
 
-static int subMinotaurStats[] = { 1, 0, 0, 0, 0, 0 };
+static int subMinotaurStats[] = { 2, 0, 1, 0, 0, 0 };
 static int* minotaurSubraceStats[] = { subMinotaurStats };
-static std::string minotaurAbilities = "hammering horns, goring rush, labyrinthine recall, proficiency with navigator's tools and water vehicles";
-	//minotaurs gain 2 tool proficiencies which need to be accounted for later
+static std::string minotaurAbilities = "horns, goring rush, hammering horns, proficiency with intimidation, hybrid nature";
+	//minotaurs gain proficiency with intimidation, which needs to be accounted for later
 	//minotaurs have no subraces, therefore no subrace abilities
 
 static int subOrcStats[] = { 2, 0, 1, -2, 0, 0 };
@@ -315,30 +319,38 @@ static std::string githzeraiGithAbilities = "monastic training, githzerai psioni
 	//githyanki have bonus spells and stuff that needs to be accounted for later
 static std::string githSubraceAbilities[] = { githyankiGithAbilities, githzeraiGithAbilities };
 
+static int subCentaurStats[] = { 2, 0, 0, 0, 1, 0 };
+static int* centaurSubraceStats[] = { subCentaurStats };
+static std::string centaurAbilities = "charge, hooves, equine build, proficiency with survival, hybrid nature";
+	//centaurs have increased base land speed, which will need to be accounted for later
+	//centaurs gain a bonus skill proficiency which needs to be accounted for later
+	//centaurs have no subraces, therefore no subrace abilities
+
+
 static int subraceNums[] = {
 	numEmptySubs, numEmptySubs, numAasimarSubs, numEmptySubs, numEmptySubs, numDragonbornSubs, numDwarfSubs, numElfSubs, numEmptySubs, numGenasiSubs, numGnomeSubs,
 	numEmptySubs, numEmptySubs, numEmptySubs, numHalflingSubs, numEmptySubs, numEmptySubs, numHumanSubs, numEmptySubs, numEmptySubs, numEmptySubs, numEmptySubs,
-	numEmptySubs, numShifterSubs, numEmptySubs, numTieflingSubs, numEmptySubs, numEmptySubs, numEmptySubs, numEmptySubs, numGithSubs
+	numEmptySubs, numShifterSubs, numEmptySubs, numTieflingSubs, numEmptySubs, numEmptySubs, numEmptySubs, numEmptySubs, numGithSubs, numEmptySubs
 };
 static std::string* subraces[] = {
 	emptySubrace, emptySubrace, aasimarSubrace, emptySubrace, emptySubrace, dragonbornSubrace, dwarfSubrace, elfSubrace, emptySubrace, genasiSubrace, gnomeSubrace,
 	emptySubrace, emptySubrace, emptySubrace, halflingSubrace, emptySubrace, emptySubrace, humanSubrace, emptySubrace, emptySubrace, emptySubrace, emptySubrace,
-	emptySubrace, shifterSubrace, emptySubrace, tieflingSubrace, emptySubrace, emptySubrace, emptySubrace, emptySubrace, githSubrace
+	emptySubrace, shifterSubrace, emptySubrace, tieflingSubrace, emptySubrace, emptySubrace, emptySubrace, emptySubrace, githSubrace, emptySubrace
 };
 static int** subraceStats[] = {
 	revenantSubraceStats, aarakocraSubraceStats, aasimarSubraceStats, bugbearSubraceStats, changelingSubraceStats, dragonbornSubraceStats, dwarfSubraceStats, elfSubraceStats, firbolgSubraceStats, genasiSubraceStats, gnomeSubraceStats,
 	goblinSubraceStats, goliathSubraceStats, halfElfSubraceStats, halflingSubraceStats, halfOrcSubraceStats, hobgoblinSubraceStats, humanSubraceStats, kenkuSubraceStats, koboldSubraceStats, lizardfolkSubraceStats, minotaurSubraceStats,
-	orcSubraceStats, shifterSubraceStats, tabaxiSubraceStats, tieflingSubraceStats, tortleSubraceStats, tritonSubraceStats, warforgedSubraceStats, yuanTiSubraceStats, githSubraceStats
+	orcSubraceStats, shifterSubraceStats, tabaxiSubraceStats, tieflingSubraceStats, tortleSubraceStats, tritonSubraceStats, warforgedSubraceStats, yuanTiSubraceStats, githSubraceStats, centaurSubraceStats
 };
 static std::string raceAbilities[] = {
 	revenantAbilities, aarakocraAbilities, aasimarAbilities, bugbearAbilities, changelingAbilities, dragonbornAbilities, dwarfAbilities, elfAbilities, firbolgAbilities, genasiAbilities, gnomeAbilities,
 	goblinAbilities, goliathAbilities, halfElfAbilities, halflingAbilities, halfOrcAbilities, hobgoblinAbilities, humanAbilities, kenkuAbilities, koboldAbilities, lizardfolkAbilities, minotaurAbilities,
-	orcAbilities, shifterAbilities, tabaxiAbilities, tieflingAbilities, tortleAbilities, tritonAbilities, warforgedAbilities, yuanTiAbilities, githAbilities
+	orcAbilities, shifterAbilities, tabaxiAbilities, tieflingAbilities, tortleAbilities, tritonAbilities, warforgedAbilities, yuanTiAbilities, githAbilities, centaurAbilities
 };
 static std::string* subraceAbilities[] = {
 	emptySubraceAbilities, emptySubraceAbilities, aasimarSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, dragonbornSubraceAbilities, dwarfSubraceAbilities, elfSubraceAbilities, emptySubraceAbilities, genasiSubraceAbilities, gnomeSubraceAbilities,
 	emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, halflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, humanSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities,
-	emptySubraceAbilities, shifterSubraceAbilities, emptySubraceAbilities, tieflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, githSubraceAbilities
+	emptySubraceAbilities, shifterSubraceAbilities, emptySubraceAbilities, tieflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, githSubraceAbilities, emptySubraceAbilities
 };
 #pragma endregion races and subraces
 
@@ -3370,7 +3382,7 @@ static std::string backgrounds[] = {
 int level;
 int levelMainClass, levelSecondaryClass; //levels for main and secondary class
 int race; //represents position in races[]
-int secondaryRace; //represents secondary race if primary race is revanant
+int secondaryRace; //represents secondary race if primary race is revanant (revenant is technically a subrace all races can take, but this is how we're representing it)
 int subrace; //represents position in subraces[race][]
 int class_; //represents position in classes[] -- unfortunately have to use _ because C++ already has classes
 int secondaryClass; //represents secondary class if primary class is rune scribe or multiclass
@@ -3544,18 +3556,6 @@ int main()
 		for (int i = 0; i < bonusRandomAssignedPoints; i++)	{
 			stats[rand() % 6]++;
 		}
-		if (races[race].compare("minotaur") == STR_COMPARE_TRUE) {
-			int randomStatToBoost = rand() % 3; //minotaur gets +1 to STR, INT, or WIS 
-			if (randomStatToBoost == 0) {
-				stats[0]++;
-			}
-			else if (randomStatToBoost == 1) {
-				stats[3]++;
-			}
-			else {
-				stats[4]++;
-			}
-		}
 
 		//feats or stat upgrades
 		int numFeats = levelMainClass / 4 + levelSecondaryClass / 4;
@@ -3722,9 +3722,23 @@ int main()
 			//race abilities
 		std::cout << std::endl << "Racial abilities: " << raceAbilities[race];
 		if (raceAbilities[race].compare("") != STR_COMPARE_TRUE) {
-			std::cout << ", ";
+			if (subraceNums[race] != 0 && subraceAbilities[race][subrace].compare("") != STR_COMPARE_TRUE) {
+				//case: race abilities is not empty, subrace exists, subrace abilities is not empty
+				std::cout << ", ";
+			}
 		}
-		std::cout << subraceAbilities[race][subrace] << std::endl;
+		if (subraceNums[race] != 0) {	//only races with some number of subraces should have their subrace abilities printed
+			std::cout << subraceAbilities[race][subrace];
+		}
+		if (secondaryRace != -1) {
+			//if main race has secondary (i.e. if main is something like revenant), we need to also remember to print off the second race abilities
+			if ((raceAbilities[race].compare("") != STR_COMPARE_TRUE || subraceAbilities[race][subrace].compare("") != STR_COMPARE_TRUE) && raceAbilities[secondaryRace].compare("") != STR_COMPARE_TRUE) {
+				//case: race or subrace is not empty, and secondary race is not empty
+				std::cout << ", ";
+			}
+			std::cout << raceAbilities[secondaryRace];
+		}
+		std::cout << std::endl;
 
 			//class abilities
 		std::cout << std::endl << "Class abilities: " << classAbilities[class_][levelMainClass - 1];
@@ -3740,7 +3754,6 @@ int main()
 			std::cout << subclassAbilities[secondaryClass][secondarySubclass][levelSecondaryClass - 1];
 		}
 
-		std::getchar(); 
 		std::cout << std::endl << "-----------------------------------------" << std::endl << std::endl;
 	} while (true);
 }
