@@ -94,7 +94,7 @@ static int* dwarfSubraceStats[] = { mountainDwarfStats, hillDwarfStats, duergarD
 static std::string dwarfAbilities = "dwarven combat training, stone-cunning, advantage on saves vs poison, resistance to poison damage, proficiency with (one of) smith/brewer/mason's tools, speed is not reduced by heavy armor";
 static std::string mountainDwarfAbilities = "60 foot darkvision, proficiency with light and medium armor";
 static std::string hillDwarfAbilities = "60 foot darkvision"; //+1 hp per level, accounted for later on
-static std::string duergarDwarfAbilities = "120 foot darkvision, sunlight sensativity, duergar magic, advantage on saves vs illusions/being charmed/being paralyzed";
+static std::string duergarDwarfAbilities = "120 foot darkvision, sunlight sensitivity, duergar magic, advantage on saves vs illusions/being charmed/being paralyzed";
 static std::string dwarfSubraceAbilities[] = { mountainDwarfAbilities, hillDwarfAbilities, duergarDwarfAbilities };
 
 static int numElfSubs = 8;
@@ -113,7 +113,7 @@ static std::string elfAbilities = "fey ancestry, trance, proficiency in percepti
 static std::string highElfAbilities = "60 foot darkvision, elf weapon training, gain a wizard cantrip";
 	//high elves gain a bonus wizard cantrip which needs to be accounted for later
 static std::string woodElfAbilities = "60 foot darkvision, elf weapon training, mask of the wild";
-static std::string drowElfAbilities = "120 foot darkvision, sunlight sensativity, drow weapon training, drow magic";
+static std::string drowElfAbilities = "120 foot darkvision, sunlight sensitivity, drow weapon training, drow magic";
 static std::string avarielElfAbilities = "60 foot darkvision, 30 foot fly speed (not in med/heavy armor)";
 static std::string grugachElfAbilities = "60 foot darkvision, grugach weapon training, gain a druid cantrip";
 	//grugach elves gain a bonus druid cantrip which needs to be accounted for later
@@ -212,7 +212,7 @@ static std::string kenkuAbilities = "expert forgery, mimicry, proficiency in 2 o
 
 static int subKoboldStats[] = { -2, 2, 0, 0, 0, 0 };
 static int* koboldSubraceStats[] = { subKoboldStats };
-static std::string koboldAbilities = "60 foot darkvision, sunlight sensativity, grover cower and beg, pack tactics";
+static std::string koboldAbilities = "60 foot darkvision, sunlight sensitivity, grovel cower and beg, pack tactics";
 	//kobolds have no subraces, therefore no subrace abilities
 
 static int subLizardfolkStats[] = { 0, 0, 2, 0, 1, 0 };
