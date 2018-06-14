@@ -387,8 +387,8 @@ static int numRangerSubs = 6;
 static std::string rangerSubclass[] = { "beast master", "gloom stalker", "horizon walker", "hunter", "monster slayer", "primeval guardian" };
 static int numRogueSubs = 7;
 static std::string rogueSubclass[] = { "arcane trickster", "assassin", "inquisitive", "mastermind", "scout", "swashbuckler", "thief" };
-static int numSorcererSubs = 8;
-static std::string sorcererSubclass[] = { "divine soul", "draconic", "phoenix", "sea", "shadow", "stone", "storm", "wild" };
+static int numSorcererSubs = 9;
+static std::string sorcererSubclass[] = { "divine soul", "draconic", "phoenix", "sea", "shadow", "stone", "storm", "wild", "giant" };
 static int numWarlockSubs = 9;
 static std::string warlockSubclass[] = { "archfey", "celestial", "fiend", "ghost in the machine", "great old one", "hexblade", "raven queen", "seeker", "undying" };
 static int numWizardSubs = 15;
@@ -2731,8 +2731,31 @@ static std::string wildSorcererAbilities[] = {
 	"wild magic surge, tides of chaos, bend luck, controlled chaos, spell bombardment",
 	"wild magic surge, tides of chaos, bend luck, controlled chaos, spell bombardment"
 };
+static std::string giantSorcererAbilities[] = {
+	"Mark of the Ordning (bonus spells)",
+	"Mark of the Ordning (bonus spells)",
+	"Mark of the Ordning (bonus spells)",
+	"Mark of the Ordning (bonus spells)",
+	"Mark of the Ordning (bonus spells)",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria, Rage of Fallen Ostoria",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria, Rage of Fallen Ostoria",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria, Rage of Fallen Ostoria",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria, Rage of Fallen Ostoria",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria, Rage of Fallen Ostoria, Blessing of the All Father",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria, Rage of Fallen Ostoria, Blessing of the All Father",
+	"Mark of the Ordning (bonus spells), Soul of Lost Ostoria, Rage of Fallen Ostoria, Blessing of the All Father"
+};
+	//giant sorcerers get a randomly chosen giant heritage, which needs to be accounted for later
 static std::string* sorcererSubclassAbilities[] = {
-	divineSoulSorcererAbilities, draconicSorcererAbilities, phoenixSorcererAbilities, seaSorcererAbilities, shadowSorcererAbilities, stoneSorcererAbilities, stormSorcererAbilities, wildSorcererAbilities
+	divineSoulSorcererAbilities, draconicSorcererAbilities, phoenixSorcererAbilities, seaSorcererAbilities, shadowSorcererAbilities, stoneSorcererAbilities, stormSorcererAbilities, wildSorcererAbilities, giantSorcererAbilities
 };
 #pragma endregion sorcerer abilities
 #pragma region
@@ -3638,12 +3661,13 @@ int main()
 		else if (classes[secondaryClass].compare("mystic") == STR_COMPARE_TRUE && subclasses[secondaryClass][secondarySubclass].compare("immortal") == STR_COMPARE_TRUE) {
 			hitPoints += levelSecondaryClass;
 		}
-		if (classes[class_].compare("sorcerer") == STR_COMPARE_TRUE && (subclasses[class_][subclass].compare("draconic") == STR_COMPARE_TRUE || subclasses[class_][subclass].compare("stone") == STR_COMPARE_TRUE)) {
+		if (classes[class_].compare("sorcerer") == STR_COMPARE_TRUE && (subclasses[class_][subclass].compare("draconic") == STR_COMPARE_TRUE || subclasses[class_][subclass].compare("stone") == STR_COMPARE_TRUE || subclasses[class_][subclass].compare("giant") == STR_COMPARE_TRUE)) {
 			hitPoints += levelMainClass;
 		}
-		else if (classes[secondaryClass].compare("sorcerer") == STR_COMPARE_TRUE && (subclasses[secondaryClass][secondarySubclass].compare("draconic") == STR_COMPARE_TRUE || subclasses[class_][subclass].compare("stone") == STR_COMPARE_TRUE)) {
+		else if (classes[secondaryClass].compare("sorcerer") == STR_COMPARE_TRUE && (subclasses[secondaryClass][secondarySubclass].compare("draconic") == STR_COMPARE_TRUE || subclasses[secondaryClass][secondarySubclass].compare("stone") == STR_COMPARE_TRUE || subclasses[secondaryClass][secondarySubclass].compare("giant") == STR_COMPARE_TRUE)) {
 			hitPoints += levelSecondaryClass;
 		}
+		
 
 		//print the results to std::out
 			//level
