@@ -23,11 +23,11 @@
 
 //races and subraces
 #pragma region
-static int numberOfRaces = 32;
+static int numberOfRaces = 33;
 static std::string races[] = {
 	"revenant", "aarakocra", "aasimar", "bugbear", "changeling", "dragonborn", "dwarf", "elf", "firbolg", "genasi", "gnome",
 	"goblin", "goliath", "half-elf", "halfling", "half-orc", "hobgoblin", "human", "kenku", "kobold", "lizardfolk", "minotaur",
-	"orc", "shifter", "tabaxi", "tiefling", "tortle", "triton", "warforged", "yuan-ti pureblood", "gith", "centaur"
+	"orc", "shifter", "tabaxi", "tiefling", "tortle", "triton", "warforged", "yuan-ti pureblood", "gith", "centaur", "kalashtar"
 };
 static int numEmptySubs = 0;
 static std::string emptySubrace[] = { "" };
@@ -62,10 +62,10 @@ static std::string bugbearAbilities = "60 foot darkvision, +5 foot melee reach, 
 	//bugbear also gains proficiency in the stealth skill
 	//bugbear has no subraces, so no subrace abilities
 
-static int subChangelingStats[] = { 0, 1, 0, 0, 0, 1 };
+static int subChangelingStats[] = { 0, 0, 0, 0, 0, 2 };
 static int* changelingSubraceStats[] = { subChangelingStats };
-static std::string changelingAbilities = "shapechanger, proficiency in deception";
-	//changeling also gains proficiency in the deception skill
+static std::string changelingAbilities = "change appearance, proficiency with 2 of deception/insight/intimidation/persuasion, unsettling visage, divergent persona (proficiency with 1 tool, plus some other stuff)";
+	//using the changeling version of the most recent unearthed arcana
 	//changeling has no subraces, so no subrace abilities
 
 static int numDragonbornSubs = 10;
@@ -232,6 +232,7 @@ static std::string orcAbilities = "60 foot darkvision, aggressive, powerful buil
 	//orcs have intimidation proficiency which needs to be accounted for later
 	//orcs have no subraces, therefore no subrace abilities
 
+/*  old shifter version -- should be deleted later
 static int numShifterSubs = 6;
 static std::string shifterSubrace[] = { "beasthide", "cliffwalk", "longstride", "longtooth", "razorclaw", "wildhunt" };
 static int beasthideShifterStats[] = { 0, 1, 1, 0, 0, 0 };
@@ -249,6 +250,21 @@ static std::string longtoothShifterAbilities = "gain a bite attack while shiftin
 static std::string razorclawShifterAbilities = "gain an unarmed strike attack while shifting";
 static std::string wildhuntShifterAbilities = "advantage on wis checks and saves while shifting";
 static std::string shifterSubraceAbilities[] = { beasthideShifterAbilities, cliffwalkShifterAbilities, longstrideShifterAbilities, longtoothShifterAbilities, razorclawShifterAbilities, wildhuntShifterAbilities };
+*/
+
+static int numShifterSubs = 4;
+static std::string shifterSubrace[] = { "beasthide", "longtooth", "swiftstride", "wildhunt" };
+static int beasthideShifterStats[] = { 0, 1, 2, 0, 0, 0 };
+static int longtoothShifterStats[] = { 2, 1, 0, 0, 0, 0 };
+static int swiftstrideShifterStats[] = { 0, 2, 0, 0, 0, 1 };
+static int wildhuntShifterStats[] = { 0, 1, 0, 0, 2, 0 };
+static int* shifterSubraceStats[] = { beasthideShifterStats, longtoothShifterStats, swiftstrideShifterStats, wildhuntShifterStats };
+static std::string shifterAbilities = "darkvision, proficiency with perception, shifting";
+static std::string beasthideShifterAbilities = "proficiency with athletics, +1d6 temp hp and +1 AC while shifting";
+static std::string longtoothShifterAbilities = "proficiency with intimidation, bite attack of 1d6 + str piercing while shifting";
+static std::string swiftstrideShifterAbilities = "proficiency with acrobatics, +5 ft movement speed, +5 ft movement speed and move as a reaction while shifting";
+static std::string wildhuntShifterAbilities = "proficiency with survival, mark the scent, advantage on wisdom checks while shifting";
+static std::string shifterSubraceAbilities[] = { beasthideShifterAbilities, longtoothShifterAbilities, swiftstrideShifterAbilities, wildhuntShifterAbilities };
 
 static int subTabaxiStats[] = { 0, 2, 0, 0, 0, 1 };
 static int* tabaxiSubraceStats[] = { subTabaxiStats };
@@ -296,10 +312,23 @@ static std::string tritonAbilities = "30 foot swim speed, amphibious, control ai
 	//tritons have bonus spells which need to be accounted for later
 	//tritons have no subraces, therefore no subrace abilities
 
+/* old version of warforged -- should be removed later
 static int subWarforgedStats[] = { 1, 0, 1, 0, 0, 0 };
 static int* warforgedSubraceStats[] = { subWarforgedStats };
 static std::string warforgedAbilities = "composite plating (+1 AC), living construct";
 	//warforged have no subraces, therefore no subrace abilities
+*/
+static int numWarforgedSubs = 3;
+static std::string warforgedSubrace[] = { "envoy", "juggernaut", "skirmisher" };
+static int envoyWarforgedStats[] = { 0, 0, 1, 0, 0, 0 };
+static int juggernautWarforgedStats[] = { 2, 0, 1, 0, 0, 0 };
+static int skirmisherWarforgedStats[] = { 0, 2, 1, 0, 0, 0 };
+static int* warforgedSubraceStats[] = { envoyWarforgedStats, juggernautWarforgedStats, skirmisherWarforgedStats };
+static std::string warforgedAbilities = "warforged resilience, sentry's rest, integrated protection";
+static std::string envoyWarforgedAbilities = "specialized design, integrated tool";
+static std::string juggernautWarforgedAbilities = "iron fists, powerful build";
+static std::string skirmisherWarforgedAbilities = "+5 foot movement speed, light step";
+static std::string warforgedSubraceAbilities[] = { envoyWarforgedAbilities, juggernautWarforgedAbilities, skirmisherWarforgedAbilities };
 
 static int subYuanTiStats[] = { 0, 0, 0, 1, 0, 2 };
 static int* yuanTiSubraceStats[] = { subYuanTiStats };
@@ -326,31 +355,35 @@ static std::string centaurAbilities = "charge, hooves, equine build, proficiency
 	//centaurs gain a bonus skill proficiency which needs to be accounted for later
 	//centaurs have no subraces, therefore no subrace abilities
 
+static int subKalashtarStats[] = { 0, 0, 0, 0, 1, 1 };
+static int* kalashtarSubraceStats[] = { subKalashtarStats };
+static std::string kalashtarAbilities = "dual mind, resistance to psychic damage, mind link, psychic glamour, severed from dreams";
+	//kalashtar have no subraces, therefore no subrace abilities
 
 static int subraceNums[] = {
 	numEmptySubs, numEmptySubs, numAasimarSubs, numEmptySubs, numEmptySubs, numDragonbornSubs, numDwarfSubs, numElfSubs, numEmptySubs, numGenasiSubs, numGnomeSubs,
 	numEmptySubs, numEmptySubs, numEmptySubs, numHalflingSubs, numEmptySubs, numEmptySubs, numHumanSubs, numEmptySubs, numEmptySubs, numEmptySubs, numEmptySubs,
-	numEmptySubs, numShifterSubs, numEmptySubs, numTieflingSubs, numEmptySubs, numEmptySubs, numEmptySubs, numEmptySubs, numGithSubs, numEmptySubs
+	numEmptySubs, numShifterSubs, numEmptySubs, numTieflingSubs, numEmptySubs, numEmptySubs, numWarforgedSubs, numEmptySubs, numGithSubs, numEmptySubs, numEmptySubs
 };
 static std::string* subraces[] = {
 	emptySubrace, emptySubrace, aasimarSubrace, emptySubrace, emptySubrace, dragonbornSubrace, dwarfSubrace, elfSubrace, emptySubrace, genasiSubrace, gnomeSubrace,
 	emptySubrace, emptySubrace, emptySubrace, halflingSubrace, emptySubrace, emptySubrace, humanSubrace, emptySubrace, emptySubrace, emptySubrace, emptySubrace,
-	emptySubrace, shifterSubrace, emptySubrace, tieflingSubrace, emptySubrace, emptySubrace, emptySubrace, emptySubrace, githSubrace, emptySubrace
+	emptySubrace, shifterSubrace, emptySubrace, tieflingSubrace, emptySubrace, emptySubrace, warforgedSubrace, emptySubrace, githSubrace, emptySubrace, emptySubrace
 };
 static int** subraceStats[] = {
 	revenantSubraceStats, aarakocraSubraceStats, aasimarSubraceStats, bugbearSubraceStats, changelingSubraceStats, dragonbornSubraceStats, dwarfSubraceStats, elfSubraceStats, firbolgSubraceStats, genasiSubraceStats, gnomeSubraceStats,
 	goblinSubraceStats, goliathSubraceStats, halfElfSubraceStats, halflingSubraceStats, halfOrcSubraceStats, hobgoblinSubraceStats, humanSubraceStats, kenkuSubraceStats, koboldSubraceStats, lizardfolkSubraceStats, minotaurSubraceStats,
-	orcSubraceStats, shifterSubraceStats, tabaxiSubraceStats, tieflingSubraceStats, tortleSubraceStats, tritonSubraceStats, warforgedSubraceStats, yuanTiSubraceStats, githSubraceStats, centaurSubraceStats
+	orcSubraceStats, shifterSubraceStats, tabaxiSubraceStats, tieflingSubraceStats, tortleSubraceStats, tritonSubraceStats, warforgedSubraceStats, yuanTiSubraceStats, githSubraceStats, centaurSubraceStats, kalashtarSubraceStats
 };
 static std::string raceAbilities[] = {
 	revenantAbilities, aarakocraAbilities, aasimarAbilities, bugbearAbilities, changelingAbilities, dragonbornAbilities, dwarfAbilities, elfAbilities, firbolgAbilities, genasiAbilities, gnomeAbilities,
 	goblinAbilities, goliathAbilities, halfElfAbilities, halflingAbilities, halfOrcAbilities, hobgoblinAbilities, humanAbilities, kenkuAbilities, koboldAbilities, lizardfolkAbilities, minotaurAbilities,
-	orcAbilities, shifterAbilities, tabaxiAbilities, tieflingAbilities, tortleAbilities, tritonAbilities, warforgedAbilities, yuanTiAbilities, githAbilities, centaurAbilities
+	orcAbilities, shifterAbilities, tabaxiAbilities, tieflingAbilities, tortleAbilities, tritonAbilities, warforgedAbilities, yuanTiAbilities, githAbilities, centaurAbilities, kalashtarAbilities
 };
 static std::string* subraceAbilities[] = {
 	emptySubraceAbilities, emptySubraceAbilities, aasimarSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, dragonbornSubraceAbilities, dwarfSubraceAbilities, elfSubraceAbilities, emptySubraceAbilities, genasiSubraceAbilities, gnomeSubraceAbilities,
 	emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, halflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, humanSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities,
-	emptySubraceAbilities, shifterSubraceAbilities, emptySubraceAbilities, tieflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, githSubraceAbilities, emptySubraceAbilities
+	emptySubraceAbilities, shifterSubraceAbilities, emptySubraceAbilities, tieflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, warforgedSubraceAbilities, emptySubraceAbilities, githSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities
 };
 #pragma endregion races and subraces
 
@@ -3247,7 +3280,7 @@ static std::string necromancyWizardAbilities[] = {
 	"necromancy savant, grim harvest, undead thralls, inured to undeath",
 	"necromancy savant, grim harvest, undead thralls, inured to undeath",
 	"necromancy savant, grim harvest, undead thralls, inured to undeath",
-	"necromancy savant, grim harvest, undead thralls, inured to undeath, command undead",
+	"necromancy savant, grim harvest, undead thralls, inured to undeath, and undead",
 	"necromancy savant, grim harvest, undead thralls, inured to undeath, command undead",
 	"necromancy savant, grim harvest, undead thralls, inured to undeath, command undead",
 	"necromancy savant, grim harvest, undead thralls, inured to undeath, command undead",
@@ -3432,7 +3465,7 @@ int main()
 		std::string input;
 		std::getline(std::cin, input);
 		if (input.compare("") == STR_COMPARE_TRUE) {
-			level = 0; 
+			level = 0;
 		}
 		else {
 			try {
@@ -3574,10 +3607,35 @@ int main()
 		}
 		int bonusRandomAssignedPoints = 0;
 		if (races[race].compare("half-elf") == STR_COMPARE_TRUE || (races[race].compare("human") == STR_COMPARE_TRUE && subraces[race][subrace].compare("variant") == STR_COMPARE_TRUE)) {
+			//these races get 2 stat points assigned to any stats of their choosing
 			bonusRandomAssignedPoints = 2;
+		}
+		if (races[race].compare("kalashtar") == STR_COMPARE_TRUE) {
+			//these races get 1 stat point assigned to any stat of their choosing
+			bonusRandomAssignedPoints = 1;
 		}
 		for (int i = 0; i < bonusRandomAssignedPoints; i++)	{
 			stats[rand() % 6]++;
+		}
+		if (races[race].compare("changeling") == STR_COMPARE_TRUE) {
+			//changelings get +1 to either dex or int
+			int isDex = rand() % 2;
+			if (isDex == 1) {
+				stats[1]++;
+			}
+			else { //isDex == 0
+				stats[3]++;
+			}
+		}
+		if (races[race].compare("warforged") == STR_COMPARE_TRUE && subraces[race][subrace].compare("envoy") == STR_COMPARE_TRUE) {
+			//envoy warforged get 2 points to add to abilities, but they must go to different ability scores
+			int stat1 = rand() % 6;
+			stats[stat1]++;
+			int stat2 = rand() % 6;
+			while (stat2 == stat1) {
+				stat2 = rand() % 6;
+			}
+			stats[stat2]++;
 		}
 
 		//feats or stat upgrades
