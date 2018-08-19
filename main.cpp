@@ -23,11 +23,12 @@
 
 //races and subraces
 #pragma region
-static int numberOfRaces = 33;
+static int numberOfRaces = 37;
 static std::string races[] = {
 	"revenant", "aarakocra", "aasimar", "bugbear", "changeling", "dragonborn", "dwarf", "elf", "firbolg", "genasi", "gnome",
 	"goblin", "goliath", "half-elf", "halfling", "half-orc", "hobgoblin", "human", "kenku", "kobold", "lizardfolk", "minotaur",
-	"orc", "shifter", "tabaxi", "tiefling", "tortle", "triton", "warforged", "yuan-ti pureblood", "gith", "centaur", "kalashtar"
+	"orc", "shifter", "tabaxi", "tiefling", "tortle", "triton", "warforged", "yuan-ti pureblood", "gith", "centaur", "kalashtar",
+	"loxodon", "simic hybrid", "vedalken", "viashino"
 };
 static int numEmptySubs = 0;
 static std::string emptySubrace[] = { "" };
@@ -360,30 +361,55 @@ static int* kalashtarSubraceStats[] = { subKalashtarStats };
 static std::string kalashtarAbilities = "dual mind, resistance to psychic damage, mind link, psychic glamour, severed from dreams";
 	//kalashtar have no subraces, therefore no subrace abilities
 
+static int subLoxodonStats[] = { 0, 0, 2, 0, 1, 0 };
+static int* loxodonSubraceStats[] = { subLoxodonStats };
+static std::string loxodonAbilities = "powerful build, loxodon bravery, natural armor, stonecunning, keen smell, proficiency with mason's tools";
+	//loxodon have no subraces, therefore no subrace abilities
+
+static int subSimicHybridStats[] = { 0, 0, 2, 0, 0, 0 };
+static int* simicHybridSubraceStats[] = { subSimicHybridStats };
+static std::string simicHybridAbilities = "darkvision, animal enhancement (x2 if 5th level or above)";
+	//simic hybrids have no subraces, therefore no subrace abilities
+
+static int subVedalkenStats[] = { 0, 0, 0, 2, 1, 0 };
+static int* vedalkenSubraceStats[] = { subVedalkenStats };
+static std::string vedalkenAbilities = "vedalken dispassion, tireless precision";
+	//no subraces, so no subrace abilities
+
+static int subViashinoStats[] = { 1, 2, 0, 0, 0, 0 };
+static int* viashinoSubraceStats[] = { subViashinoStats };
+static std::string viashinoAbilities = "bite, lashing tail, proficient with 1 of acrobatics/stealth";
+	//no subraces, therefore no subrace abilities
+
 static int subraceNums[] = {
 	numEmptySubs, numEmptySubs, numAasimarSubs, numEmptySubs, numEmptySubs, numDragonbornSubs, numDwarfSubs, numElfSubs, numEmptySubs, numGenasiSubs, numGnomeSubs,
 	numEmptySubs, numEmptySubs, numEmptySubs, numHalflingSubs, numEmptySubs, numEmptySubs, numHumanSubs, numEmptySubs, numEmptySubs, numEmptySubs, numEmptySubs,
-	numEmptySubs, numShifterSubs, numEmptySubs, numTieflingSubs, numEmptySubs, numEmptySubs, numWarforgedSubs, numEmptySubs, numGithSubs, numEmptySubs, numEmptySubs
+	numEmptySubs, numShifterSubs, numEmptySubs, numTieflingSubs, numEmptySubs, numEmptySubs, numWarforgedSubs, numEmptySubs, numGithSubs, numEmptySubs, numEmptySubs, 
+	numEmptySubs, numEmptySubs, numEmptySubs, numEmptySubs
 };
 static std::string* subraces[] = {
 	emptySubrace, emptySubrace, aasimarSubrace, emptySubrace, emptySubrace, dragonbornSubrace, dwarfSubrace, elfSubrace, emptySubrace, genasiSubrace, gnomeSubrace,
 	emptySubrace, emptySubrace, emptySubrace, halflingSubrace, emptySubrace, emptySubrace, humanSubrace, emptySubrace, emptySubrace, emptySubrace, emptySubrace,
-	emptySubrace, shifterSubrace, emptySubrace, tieflingSubrace, emptySubrace, emptySubrace, warforgedSubrace, emptySubrace, githSubrace, emptySubrace, emptySubrace
+	emptySubrace, shifterSubrace, emptySubrace, tieflingSubrace, emptySubrace, emptySubrace, warforgedSubrace, emptySubrace, githSubrace, emptySubrace, emptySubrace, 
+	emptySubrace, emptySubrace, emptySubrace, emptySubrace
 };
 static int** subraceStats[] = {
 	revenantSubraceStats, aarakocraSubraceStats, aasimarSubraceStats, bugbearSubraceStats, changelingSubraceStats, dragonbornSubraceStats, dwarfSubraceStats, elfSubraceStats, firbolgSubraceStats, genasiSubraceStats, gnomeSubraceStats,
 	goblinSubraceStats, goliathSubraceStats, halfElfSubraceStats, halflingSubraceStats, halfOrcSubraceStats, hobgoblinSubraceStats, humanSubraceStats, kenkuSubraceStats, koboldSubraceStats, lizardfolkSubraceStats, minotaurSubraceStats,
-	orcSubraceStats, shifterSubraceStats, tabaxiSubraceStats, tieflingSubraceStats, tortleSubraceStats, tritonSubraceStats, warforgedSubraceStats, yuanTiSubraceStats, githSubraceStats, centaurSubraceStats, kalashtarSubraceStats
+	orcSubraceStats, shifterSubraceStats, tabaxiSubraceStats, tieflingSubraceStats, tortleSubraceStats, tritonSubraceStats, warforgedSubraceStats, yuanTiSubraceStats, githSubraceStats, centaurSubraceStats, kalashtarSubraceStats, 
+	loxodonSubraceStats, simicHybridSubraceStats, vedalkenSubraceStats, viashinoSubraceStats
 };
 static std::string raceAbilities[] = {
 	revenantAbilities, aarakocraAbilities, aasimarAbilities, bugbearAbilities, changelingAbilities, dragonbornAbilities, dwarfAbilities, elfAbilities, firbolgAbilities, genasiAbilities, gnomeAbilities,
 	goblinAbilities, goliathAbilities, halfElfAbilities, halflingAbilities, halfOrcAbilities, hobgoblinAbilities, humanAbilities, kenkuAbilities, koboldAbilities, lizardfolkAbilities, minotaurAbilities,
-	orcAbilities, shifterAbilities, tabaxiAbilities, tieflingAbilities, tortleAbilities, tritonAbilities, warforgedAbilities, yuanTiAbilities, githAbilities, centaurAbilities, kalashtarAbilities
+	orcAbilities, shifterAbilities, tabaxiAbilities, tieflingAbilities, tortleAbilities, tritonAbilities, warforgedAbilities, yuanTiAbilities, githAbilities, centaurAbilities, kalashtarAbilities, 
+	loxodonAbilities, simicHybridAbilities, vedalkenAbilities, viashinoAbilities
 };
 static std::string* subraceAbilities[] = {
 	emptySubraceAbilities, emptySubraceAbilities, aasimarSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, dragonbornSubraceAbilities, dwarfSubraceAbilities, elfSubraceAbilities, emptySubraceAbilities, genasiSubraceAbilities, gnomeSubraceAbilities,
 	emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, halflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, humanSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities,
-	emptySubraceAbilities, shifterSubraceAbilities, emptySubraceAbilities, tieflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, warforgedSubraceAbilities, emptySubraceAbilities, githSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities
+	emptySubraceAbilities, shifterSubraceAbilities, emptySubraceAbilities, tieflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, warforgedSubraceAbilities, emptySubraceAbilities, githSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, 
+	emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities
 };
 #pragma endregion races and subraces
 
@@ -3636,6 +3662,14 @@ int main()
 				stat2 = rand() % 6;
 			}
 			stats[stat2]++;
+		}
+		if (races[race].compare("simic hybrid") == STR_COMPARE_TRUE) {
+			//simic hybrids get +1 to any stat other than constitution
+			int stat = rand() % 5;
+			if (stat >= 3) { //0 is STR, 1 is DEX
+				stat++;
+			}
+			stats[stat]++;
 		}
 
 		//feats or stat upgrades
