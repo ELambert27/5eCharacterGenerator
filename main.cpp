@@ -165,11 +165,24 @@ static int* goliathSubraceStats[] = { subGoliathStats };
 static std::string goliathAbilities = "stone's endurance, powerful build, mountain born, proficiency in athletics";
 	//goliaths have no subraces, therefore no subrace abilities
 
-static int subHalfElfStats[] = { 0, 0, 0, 0, 0, 2 };
-static int* halfElfSubraceStats[] = { subHalfElfStats };
-static std::string halfElfAbilities = "60 foot darkvision, fey ancestry, skill versatility (+2 skill proficiencies)";
+static int numHalfElfSubs = 6;
+static std::string halfElfSubrace[] = { "standard", "elven", "wood", "high/sun/moon", "drow", "aquatic" };
+static int standardHalfElfStats[] = { 0, 0, 0, 0, 0, 2 };
+static int elvenHalfElfStats[] = { 0, 0, 0, 0, 0, 2 };
+static int woodHalfElfStats[] = { 0, 0, 0, 0, 0, 2 };
+static int highHalfElfStats[] = { 0, 0, 0, 0, 0, 2 };
+static int drowHalfElfStats[] = { 0, 0, 0, 0, 0, 2 };
+static int aquaticHalfElfStats[] = { 0, 0, 0, 0, 0, 2 };
+static int* halfElfSubraceStats[] = { standardHalfElfStats, elvenHalfElfStats, woodHalfElfStats, highHalfElfStats, drowHalfElfStats, aquaticHalfElfStats };
+static std::string halfElfAbilities = "60 foot darkvision, fey ancestry";
+static std::string standardHalfElfAbilities = "skill versatility (+2 skill proficiencies)";
+static std::string elvenHalfElfAbilities = "keen senses";
+static std::string woodHalfElfAbilities = "elf weapon training OR fleet of foot OR mask of the wild";
+static std::string highHalfElfAbilities = "elf weapon training OR cantrip";
+static std::string drowHalfElfAbilities = "drow magic";
+static std::string aquaticHalfElfAbilities = "swim speed 30 feet";
+static std::string halfElfSubraceAbilities[] = { standardHalfElfAbilities, elvenHalfElfAbilities, woodHalfElfAbilities, highHalfElfAbilities, drowHalfElfAbilities, aquaticHalfElfAbilities };
 	//half elves gain 2 bonus skill proficiencies which will need to be accounted for later
-	//half elves have no (implemented) subraces, therefore no subrace abilities
 
 static int numHalflingSubs = 3;
 static std::string halflingSubrace[] = { "ghostwise", "lightfoot", "stout" };
@@ -383,13 +396,13 @@ static std::string viashinoAbilities = "bite, lashing tail, proficient with 1 of
 
 static int subraceNums[] = {
 	numEmptySubs, numEmptySubs, numAasimarSubs, numEmptySubs, numEmptySubs, numDragonbornSubs, numDwarfSubs, numElfSubs, numEmptySubs, numGenasiSubs, numGnomeSubs,
-	numEmptySubs, numEmptySubs, numEmptySubs, numHalflingSubs, numEmptySubs, numEmptySubs, numHumanSubs, numEmptySubs, numEmptySubs, numEmptySubs, numEmptySubs,
+	numEmptySubs, numEmptySubs, numHalfElfSubs, numHalflingSubs, numEmptySubs, numEmptySubs, numHumanSubs, numEmptySubs, numEmptySubs, numEmptySubs, numEmptySubs,
 	numEmptySubs, numShifterSubs, numEmptySubs, numTieflingSubs, numEmptySubs, numEmptySubs, numWarforgedSubs, numEmptySubs, numGithSubs, numEmptySubs, numEmptySubs, 
 	numEmptySubs, numEmptySubs, numEmptySubs, numEmptySubs
 };
 static std::string* subraces[] = {
 	emptySubrace, emptySubrace, aasimarSubrace, emptySubrace, emptySubrace, dragonbornSubrace, dwarfSubrace, elfSubrace, emptySubrace, genasiSubrace, gnomeSubrace,
-	emptySubrace, emptySubrace, emptySubrace, halflingSubrace, emptySubrace, emptySubrace, humanSubrace, emptySubrace, emptySubrace, emptySubrace, emptySubrace,
+	emptySubrace, emptySubrace, halfElfSubrace, halflingSubrace, emptySubrace, emptySubrace, humanSubrace, emptySubrace, emptySubrace, emptySubrace, emptySubrace,
 	emptySubrace, shifterSubrace, emptySubrace, tieflingSubrace, emptySubrace, emptySubrace, warforgedSubrace, emptySubrace, githSubrace, emptySubrace, emptySubrace, 
 	emptySubrace, emptySubrace, emptySubrace, emptySubrace
 };
@@ -407,7 +420,7 @@ static std::string raceAbilities[] = {
 };
 static std::string* subraceAbilities[] = {
 	emptySubraceAbilities, emptySubraceAbilities, aasimarSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, dragonbornSubraceAbilities, dwarfSubraceAbilities, elfSubraceAbilities, emptySubraceAbilities, genasiSubraceAbilities, gnomeSubraceAbilities,
-	emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, halflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, humanSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities,
+	emptySubraceAbilities, emptySubraceAbilities, halfElfSubraceAbilities, halflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, humanSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities,
 	emptySubraceAbilities, shifterSubraceAbilities, emptySubraceAbilities, tieflingSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, warforgedSubraceAbilities, emptySubraceAbilities, githSubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, 
 	emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities, emptySubraceAbilities
 };
