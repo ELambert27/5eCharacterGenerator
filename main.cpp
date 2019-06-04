@@ -437,8 +437,8 @@ static int classHitDice[] = {
 	8, 12, 8, 8, 8, 10, 8, 8,
 	10, 10, 8, 6, 8, 6, 8, 0
 };
-static int numArtificerSubs = 2;
-static std::string artificerSubclass[] = { "alchemist", "gunslinger" };
+static int numArtificerSubs = 4;
+static std::string artificerSubclass[] = { "alchemist", "archivist", "artillerist", "battle smith" };
 static int numBarbarianSubs = 6;
 static std::string barbarianSubclass[] = { "ancestral guardian", "battlerager", "berserker", "storm herald", "totem", "zealot" };
 static int numBardSubs = 6;
@@ -481,75 +481,121 @@ static std::string* subclasses[] = {
 #pragma region 
 #pragma region
 static std::string artificerAbilities[] = {
-	"magic item analysis",
-	"magic item analysis, tool expertise, wondrous invention",
-	"magic item analysis, tool expertise, wondrous invention",
-	"magic item analysis, tool expertise, wondrous invention, infuse magic",
-	"magic item analysis, tool expertise, wondrous invention (2 items), infuse magic, superior attunement",
-	"magic item analysis, tool expertise, wondrous invention (2 items), infuse magic, superior attunement, mechanical servant",
-	"magic item analysis, tool expertise, wondrous invention (2 items), infuse magic, superior attunement, mechanical servant",
-	"magic item analysis, tool expertise, wondrous invention (2 items), infuse magic, superior attunement, mechanical servant",
-	"magic item analysis, tool expertise, wondrous invention (2 items), infuse magic, superior attunement, mechanical servant",
-	"magic item analysis, tool expertise, wondrous invention (3 items), infuse magic, superior attunement, mechanical servant",
-	"magic item analysis, tool expertise, wondrous invention (3 items), infuse magic, superior attunement, mechanical servant", 
-	"magic item analysis, tool expertise, wondrous invention (3 items), infuse magic, superior attunement, mechanical servant", 
-	"magic item analysis, tool expertise, wondrous invention (3 items), infuse magic, superior attunement, mechanical servant", 
-	"magic item analysis, tool expertise, wondrous invention (3 items), infuse magic, superior attunement, mechanical servant", 
-	"magic item analysis, tool expertise, wondrous invention (4 items), infuse magic, superior attunement (additional item), mechanical servant", 
-	"magic item analysis, tool expertise, wondrous invention (4 items), infuse magic, superior attunement (additional item), mechanical servant",
-	"magic item analysis, tool expertise, wondrous invention (4 items), infuse magic, superior attunement (additional item), mechanical servant",
-	"magic item analysis, tool expertise, wondrous invention (4 items), infuse magic, superior attunement (additional item), mechanical servant",
-	"magic item analysis, tool expertise, wondrous invention (4 items), infuse magic, superior attunement (additional item), mechanical servant",
-	"magic item analysis, tool expertise, wondrous invention (5 items), infuse magic, superior attunement (additional item), mechanical servant, soul of artifice"
+	"magical tinkering",
+	"magical tinkering, infuse item",
+	"magical tinkering, infuse item, tool expertise",
+	"magical tinkering, infuse item, tool expertise",
+	"magical tinkering, infuse item, tool expertise, arcane armament",
+	"magical tinkering, infuse item, tool expertise, arcane armament",
+	"magical tinkering, infuse item, tool expertise, arcane armament",
+	"magical tinkering, infuse item, tool expertise, arcane armament",
+	"magical tinkering, infuse item, tool expertise, arcane armament",
+	"magical tinkering, infuse item, tool expertise, arcane armament, the right cantrip for the job",
+	"magical tinkering, infuse item, tool expertise, arcane armament, the right cantrip for the job", 
+	"magical tinkering, infuse item, tool expertise, arcane armament, the right cantrip for the job", 
+	"magical tinkering, infuse item, tool expertise, arcane armament, the right cantrip for the job", 
+	"magical tinkering, infuse item, tool expertise, arcane armament, the right cantrip for the job", 
+	"magical tinkering, infuse item, tool expertise, arcane armament, the right cantrip for the job", 
+	"magical tinkering, infuse item, tool expertise, arcane armament, the right cantrip for the job",
+	"magical tinkering, infuse item, tool expertise, arcane armament, the right cantrip for the job",
+	"magical tinkering, infuse item, tool expertise, arcane armament, the right cantrip for the job, spell-storing item",
+	"magical tinkering, infuse item, tool expertise, arcane armament, the right cantrip for the job, spell-storing item",
+	"magical tinkering, infuse item, tool expertise, arcane armament, the right cantrip for the job, spell-storing item, soul of artifice"
 };
 static std::string alchemistArtificerAbilities[] = {
-	"alchemist's satchel, alchemical formula (fire, acid, and one other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and one other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and two other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and two other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and two other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and two other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and two other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and two other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and three other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and three other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and three other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and three other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and three other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and four other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and four other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and four other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and five other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and five other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and five other)",
-	"alchemist's satchel, alchemical formula (fire, acid, and five other)"
+	"",
+	"",
+	"alchemical homunculus",
+	"alchemical homunculus",
+	"alchemical homunculus",
+	"alchemical homunculus, alchemical mastery",
+	"alchemical homunculus, alchemical mastery",
+	"alchemical homunculus, alchemical mastery",
+	"alchemical homunculus, alchemical mastery",
+	"alchemical homunculus, alchemical mastery",
+	"alchemical homunculus, alchemical mastery",
+	"alchemical homunculus, alchemical mastery",
+	"alchemical homunculus, alchemical mastery",
+	"alchemical homunculus, alchemical mastery, chemical savant",
+	"alchemical homunculus, alchemical mastery, chemical savant",
+	"alchemical homunculus, alchemical mastery, chemical savant",
+	"alchemical homunculus, alchemical mastery, chemical savant",
+	"alchemical homunculus, alchemical mastery, chemical savant",
+	"alchemical homunculus, alchemical mastery, chemical savant",
+	"alchemical homunculus, alchemical mastery, chemical savant"
 };
-	//alchemist has random alchemical formulas that need to be accounted for later
-static std::string gunslingerArtificerAbilites[] = {
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round, explosive round",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round, explosive round",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round, explosive round",
-	"proficiency with smith's tools, gain the mending cantrip, thunder cannon, arcane magazine, thunder monger, blast wave, piercing round, explosive round"
+
+static std::string archivistArtificerAbilites[] = {
+	"",
+	"",
+	"artificial mind",
+	"artificial mind",
+	"artificial mind",
+	"artificial mind, mind network",
+	"artificial mind, mind network",
+	"artificial mind, mind network",
+	"artificial mind, mind network",
+	"artificial mind, mind network",
+	"artificial mind, mind network",
+	"artificial mind, mind network",
+	"artificial mind, mind network",
+	"artificial mind, mind network, pure information",
+	"artificial mind, mind network, pure information",
+	"artificial mind, mind network, pure information",
+	"artificial mind, mind network, pure information",
+	"artificial mind, mind network, pure information",
+	"artificial mind, mind network, pure information",
+	"artificial mind, mind network, pure information"
 };
-	//gunslinger gains the mending cantrip, which needs to be accounted for later
+
+static std::string artilleristArtificerAbilites[] = {
+	"",
+	"",
+	"arcane turret",
+	"arcane turret",
+	"arcane turret",
+	"arcane turret, wand prototype",
+	"arcane turret, wand prototype",
+	"arcane turret, wand prototype",
+	"arcane turret, wand prototype",
+	"arcane turret, wand prototype",
+	"arcane turret, wand prototype",
+	"arcane turret, wand prototype",
+	"arcane turret, wand prototype",
+	"arcane turret, wand prototype, fortified position",
+	"arcane turret, wand prototype, fortified position",
+	"arcane turret, wand prototype, fortified position",
+	"arcane turret, wand prototype, fortified position",
+	"arcane turret, wand prototype, fortified position",
+	"arcane turret, wand prototype, fortified position",
+	"arcane turret, wand prototype, fortified position"
+}; 
+
+static std::string battleSmithArtificerAbilites[] = {
+	"",
+	"",
+	"battle ready, iron defender",
+	"battle ready, iron defender",
+	"battle ready, iron defender",
+	"battle ready, iron defender, arcane jolt",
+	"battle ready, iron defender, arcane jolt",
+	"battle ready, iron defender, arcane jolt",
+	"battle ready, iron defender, arcane jolt",
+	"battle ready, iron defender, arcane jolt",
+	"battle ready, iron defender, arcane jolt",
+	"battle ready, iron defender, arcane jolt",
+	"battle ready, iron defender, arcane jolt",
+	"battle ready, iron defender, arcane jolt, improved defender",
+	"battle ready, iron defender, arcane jolt, improved defender",
+	"battle ready, iron defender, arcane jolt, improved defender",
+	"battle ready, iron defender, arcane jolt, improved defender",
+	"battle ready, iron defender, arcane jolt, improved defender",
+	"battle ready, iron defender, arcane jolt, improved defender",
+	"battle ready, iron defender, arcane jolt, improved defender"
+};
+
 static std::string* artificerSubclassAbilities[] = {
-	alchemistArtificerAbilities, gunslingerArtificerAbilites
+	alchemistArtificerAbilities, archivistArtificerAbilites, artilleristArtificerAbilites, battleSmithArtificerAbilites
 };
 #pragma endregion artificer abilities
 #pragma region
